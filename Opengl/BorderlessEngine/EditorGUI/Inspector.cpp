@@ -41,8 +41,9 @@ namespace BorderlessEngineEditor
 		ImGui::Spacing();
 
 		auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilterComponent>();
-		ImGui::Text("MeshFilter");
-
-
+		if (meshFilter != NULL)
+		{
+			ImGui::Text("MeshFilter");
+		}
 	}
 }

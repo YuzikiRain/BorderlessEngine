@@ -1,9 +1,10 @@
 #pragma once
 #include <Model/Mesh.h>
+#include <ECS/Component/Component.h>
 
 namespace BorderlessEngine
 {
-	class MeshFilterComponent
+	class MeshFilterComponent : public Component
 	{
 	public:
 		MeshFilterComponent();

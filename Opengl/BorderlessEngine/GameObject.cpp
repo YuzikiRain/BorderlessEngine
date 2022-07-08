@@ -14,30 +14,6 @@ namespace BorderlessEngine
 		delete[] name;
 	}
 
-	template<typename Component> Component* GameObject::AddComponent()
-	{
-		Component* component = new Component();
-		components.emplace_back(component);
-		return component;
-	}
-
-	template<typename Component> void GameObject::RemoveComponent(Component component)
-	{
-		components.remove(component);
-	}
-
-	template<typename Component> Component* GameObject::GetComponent()
-	{
-		for (auto i = components.begin(); i != components.end(); i++)
-		{
-			if (Component* component = dynamic_cast<Component*>(&(*i)))
-			{
-				return component;
-			}
-		}
-		return NULL;
-	}
-
 	void GameObject::SetName(const char* name)
 	{
 		// 这里分配的内存空间为sizeof(defaultName)，而不是strlen(defaultName)
