@@ -1,12 +1,5 @@
-cmake_minimum_required(VERSION 3.0.0)
-project(MyCPlusProject VERSION 0.1.0)
+cmake_minimum_required(VERSION 3.5)
+project(BorderlessEngineProject VERSION 0.1.0)
 
-include(CTest)
-enable_testing()
-
-set(SOURCES src/main.cpp)
-add_executable(MyCPlusProject ${SOURCES})
-
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/BorderlessEngine/Runtime borderless_engine_runtime)
+add_subdirectory(borderless_engine_editor)
