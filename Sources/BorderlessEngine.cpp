@@ -1,6 +1,6 @@
-#include <BorderlessEngine.h>
+#include "BorderlessEngine.h"
 #include "glad/glad.h"
-#include "GLFW/glfw3.h"
+#include "GLFW/include/glfw3.h"
 
 #include <iostream>
 #include <cmath>
@@ -22,6 +22,7 @@ namespace BorderlessEngine
 
 	void Launch()
 	{
+		std::cout << "BorderlessEngine launched" << std::endl;
 		InitializeWindow();
 		InitSystems();
 		GameLoop();
