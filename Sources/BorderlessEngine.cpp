@@ -2,6 +2,9 @@
 #include "glad/glad.h"
 #include "GLFW/include/glfw3.h"
 
+#include "Input/InputSystem.h"
+#include "Render/RenderSystem.h"
+
 #include <iostream>
 #include <cmath>
 #include <chrono>
@@ -60,17 +63,17 @@ namespace BorderlessEngine
 
 	void InitSystems()
 	{
-		// InputSystem::Initialize();
-		// RenderSystem::Initialize();
+		InputSystem::Initialize();
+		RenderSystem::Initialize();
 	}
 
 	void GameLoop()
 	{
 		while (!BorderlessEngine::ShouldQuit())
 		{
-			// InputSystem::Update();
+			InputSystem::Update();
 			// // 渲染可能会消耗大量时间，放在模拟时间间隔之外以避免死亡螺旋
-			// RenderSystem::Update();
+			RenderSystem::Update();
 
 			double currentTime = glfwGetTime();
 			if (currentTime < targetTime)

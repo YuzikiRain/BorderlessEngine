@@ -1,5 +1,4 @@
 #include "BorderlessEngine.h"
-#include <iostream>
 
 int main()
 {
