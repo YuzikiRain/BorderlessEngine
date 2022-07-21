@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(borderlessengine_runtime)
 
+
 # set (PROJECT_LIBRARIES)
 set(PROJECT_INCLUDE)
 set(PROJECT_SOURCE)
@@ -8,7 +9,6 @@ set(PACKAGE_PATH ${CMAKE_SOURCE_DIR}/packages)
 
 list(APPEND PROJECT_INCLUDE ${PROJECT_SOURCE_DIR})
 list(APPEND PROJECT_INCLUDE ${PACKAGE_PATH})
-message(${PROJECT_INCLUDE})
 list(APPEND PROJECT_SOURCE ${PROJECT_SOURCE_DIR}/BorderlessEngine.cpp)
 
 # GLFW
@@ -25,12 +25,12 @@ set(GLAD_SRC ${GLAD_PATH})
 # list(APPEND PROJECT_INCLUDE ${GLAD_INCLUDE})
 list(APPEND PROJECT_SOURCE ${GLAD_SRC}/glad.c)
 
-# Input
-list(APPEND PROJECT_SOURCE ${PROJECT_SOURCE_DIR}/Input/InputSystem.cpp)
-list(APPEND PROJECT_SOURCE ${PROJECT_SOURCE_DIR}/Render/RenderSystem.cpp)
+# 模块
+file ( GLOB_RECURSE Module_SOURCE true RELATIVE ${PROJECT_SOURCE_DIR} *.cpp )
+message( STATUS "Files are ${PROJECT_SOURCE}" )
 
 
-add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCE})
+add_library(${PROJECT_NAME} STATIC ${Module_SOURCE} ${PROJECT_SOURCE})
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_INCLUDE})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${GLFW_LIB})
 

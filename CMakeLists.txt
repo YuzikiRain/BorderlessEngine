@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(borderlessengine)
 
-set(borderlessengine_directory ${PROJECT_SOURCE_DIR}/Sources)
+set(borderlessengine_directory ${PROJECT_SOURCE_DIR}/Sources/Runtime)
 # MESSAGE( STATUS "${PROJECT_SOURCE_DIR}/Sources ${PROJECT_SOURCE_DIR}/Sources")
 add_subdirectory(${borderlessengine_directory})
 

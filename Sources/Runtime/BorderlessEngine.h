@@ -3,14 +3,16 @@
 #include "GLFW/include/glfw3.h"
 #include <list>
 
-namespace BorderlessEngine {
-    void Launch();
+namespace BorderlessEngine
+{
+	void Launch();
 	bool InitializeWindow();
 	void InitSystems();
+	void InitEditor();
 	void GameLoop();
 	void Quit();
 	bool ShouldQuit();
-	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+	void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 	double GetFrameInterval();
 	double GetFrameRate();
 
@@ -19,5 +21,4 @@ namespace BorderlessEngine {
 	extern double frameTime;
 	extern double accumulator;
 	extern double timeScale;
-
 }

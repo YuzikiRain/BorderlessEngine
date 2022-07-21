@@ -28,6 +28,7 @@ namespace BorderlessEngine
 		std::cout << "BorderlessEngine launched" << std::endl;
 		InitializeWindow();
 		InitSystems();
+		InitEditor();
 		GameLoop();
 		Quit();
 	}
@@ -67,6 +68,11 @@ namespace BorderlessEngine
 		RenderSystem::Initialize();
 	}
 
+	void InitEditor()
+	{
+		BorderlessEngineEditor::EditorGUI::InitImgui(window);
+	}
+
 	void GameLoop()
 	{
 		while (!BorderlessEngine::ShouldQuit())
@@ -74,6 +80,7 @@ namespace BorderlessEngine
 			InputSystem::Update();
 			// // 渲染可能会消耗大量时间，放在模拟时间间隔之外以避免死亡螺旋
 			RenderSystem::Update();
+			BorderlessEngineEditor::EditorGUI::Loop()
 
 			double currentTime = glfwGetTime();
 			if (currentTime < targetTime)

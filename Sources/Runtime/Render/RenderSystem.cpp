@@ -24,17 +24,10 @@ namespace BorderlessEngine {
 		glClearColor(0, 0, .4, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// BorderlessEngineEditor::EditorGUI::DrawImgui();
-
-		// for (auto it = entities.begin(); it != entities.end(); it++)
-		// {
-		// 	auto entity = *it;
-		// }
-
 		glfwSwapBuffers(window);
 	}
 	void RenderSystem::Destroy()
 	{
-		// BorderlessEngineEditor::EditorGUI::ShutDownEditorGUI();
+
 	}
 }
