@@ -1,13 +1,21 @@
+#define NTDDI_VERSION 0x0A000006 // NTDDI_WIN10_RS5
+#define _WIN32_WINNT 0x0A00		 // _WIN32_WINNT_WIN10, the _WIN32_WINNT macro must also be defined when defining NTDDI_VERSION
+
+#include "BorderlessEngine.h"
 #include "EditorGUI/EditorGUI.h"
 #include "Entity.h"
-// #include <Scene.h>
+#include "Scene.h"
 #include <windows.h>
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 #include <shobjidl.h>
 #include <string>
 
-namespace BorderlessEngineEditor
+#include <commdlg.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include "GLFW/glfw3native.h"
+
+namespace BorderlessEditor
 {
 	void EditorGUI::InitImgui(GLFWwindow *window)
 	{
@@ -31,12 +39,7 @@ namespace BorderlessEngineEditor
 
 	void EditorGUI::Loop()
 	{
-		BorderlessEngineEditor::EditorGUI::DrawImgui();
-
-		for (auto it = entities.begin(); it != entities.end(); it++)
-		{
-			auto entity = *it;
-		}
+		BorderlessEditor::EditorGUI::DrawImgui();
 	}
 
 	void EditorGUI::DrawImgui()
@@ -186,53 +189,67 @@ namespace BorderlessEngineEditor
 		return NULL;
 	}
 
-	PWSTR WINAPI SaveFile()
+	// PWSTR WINAPI SaveFile()
+	// {
+	// 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+	// 										  COINIT_DISABLE_OLE1DDE);
+	// 	if (SUCCEEDED(hr))
+	// 	{
+	// 		PWSTR pszFilePath;
+	// 		IFileSaveDialog *pFileOpen;
+
+	// 		// Create the FileOpenDialog object.
+	// 		hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
+	// 							  IID_IFileSaveDialog, reinterpret_cast<void **>(&pFileOpen));
+
+	// 		if (SUCCEEDED(hr))
+	// 		{
+	// 			// 设置文件筛选
+	// 			pFileOpen->SetFileTypes(ARRAYSIZE(fileType), fileType);
+	// 			// 设置默认扩展名
+	// 			pFileOpen->SetDefaultExtension(L"scene");
+
+	// 			// Show the Open dialog box.
+	// 			hr = pFileOpen->Show(NULL);
+
+	// 			// Get the file name from the dialog box.
+	// 			if (SUCCEEDED(hr))
+	// 			{
+	// 				IShellItem *pItem;
+	// 				hr = pFileOpen->GetResult(&pItem);
+	// 				if (SUCCEEDED(hr))
+	// 				{
+	// 					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+	// 					// Display the file name to the user.
+	// 					if (SUCCEEDED(hr))
+	// 					{
+	// 						// MessageBoxW(NULL, pszFilePath, L"File Path", MB_OK);
+	// 						return pszFilePath;
+	// 						CoTaskMemFree(pszFilePath);
+	// 					}
+	// 					pItem->Release();
+	// 				}
+	// 			}
+	// 			pFileOpen->Release();
+	// 		}
+	// 		CoUninitialize();
+	// 	}
+	// 	return NULL;
+	// }
+
+	std::string SaveFile()
 	{
-		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
-											  COINIT_DISABLE_OLE1DDE);
-		if (SUCCEEDED(hr))
-		{
-			PWSTR pszFilePath;
-			IFileSaveDialog *pFileOpen;
-
-			// Create the FileOpenDialog object.
-			hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
-								  IID_IFileSaveDialog, reinterpret_cast<void **>(&pFileOpen));
-
-			if (SUCCEEDED(hr))
-			{
-				// 设置文件筛选
-				pFileOpen->SetFileTypes(ARRAYSIZE(fileType), fileType);
-				// 设置默认扩展名
-				pFileOpen->SetDefaultExtension(L"scene");
-
-				// Show the Open dialog box.
-				hr = pFileOpen->Show(NULL);
-
-				// Get the file name from the dialog box.
-				if (SUCCEEDED(hr))
-				{
-					IShellItem *pItem;
-					hr = pFileOpen->GetResult(&pItem);
-					if (SUCCEEDED(hr))
-					{
-						hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-
-						// Display the file name to the user.
-						if (SUCCEEDED(hr))
-						{
-							// MessageBoxW(NULL, pszFilePath, L"File Path", MB_OK);
-							return pszFilePath;
-							CoTaskMemFree(pszFilePath);
-						}
-						pItem->Release();
-					}
-				}
-				pFileOpen->Release();
-			}
-			CoUninitialize();
-		}
-		return NULL;
+		OPENFILENAMEA ofn;
+		CHAR szFile[260] = {0};
+		ZeroMemory(&ofn, sizeof(OPENFILENAME));
+		ofn.lStructSize = sizeof(OPENFILENAME);
+		ofn.lpstrFile = szFile;
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+		if (GetOpenFileNameA(&ofn) == TRUE)
+			return ofn.lpstrFile;
+		else
+			return std::string();
 	}
 
 	void EditorGUI::NewScene()
@@ -251,6 +268,7 @@ namespace BorderlessEngineEditor
 
 		char pathBuffer[255];
 		WideCharToMultiByte(CP_ACP, 0, path, -1, pathBuffer, sizeof(pathBuffer), NULL, NULL);
+		
 		YAML::Node sceneData = YAML::LoadFile(pathBuffer);
 		auto objs = vector<BorderlessEngine::GameObject *>();
 
@@ -267,12 +285,13 @@ namespace BorderlessEngineEditor
 
 	void EditorGUI::SaveScene()
 	{
+		// auto path = static_cast<std::string>(SaveFile());
 		auto path = SaveFile();
-		if (!path)
+		if (path.empty())
 			return;
 
-		char pathBuffer[255];
-		WideCharToMultiByte(CP_ACP, 0, path, -1, pathBuffer, sizeof(pathBuffer), NULL, NULL);
+		// char pathBuffer[255];
+		// WideCharToMultiByte(CP_ACP, 0, path, -1, pathBuffer, sizeof(pathBuffer), NULL, NULL);
 
 		fstream sceneFileStream;
 		sceneFileStream.open(path, ios::out | ios::trunc);
@@ -307,6 +326,5 @@ namespace BorderlessEngineEditor
 	vector<Window *> EditorGUI::windows = vector<Window *>();
 	Inspector *EditorGUI::inspector = 0;
 	Hierarchy *EditorGUI::hierarchy = 0;
-	vector<Entity *> *EditorGUI::entities = vector<Entity *>();
 	BorderlessEngine::Scene *EditorGUI::currentScene;
 }

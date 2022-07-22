@@ -1,8 +1,8 @@
-#include "BorderlessEngine.h"
+#include "BorderlessEditor.h"
 
 int main()
 {
-    BorderlessEngine::Launch();
+    BorderlessEditor::Launch();
 
     return 0;
 }

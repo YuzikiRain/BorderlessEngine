@@ -1,9 +1,9 @@
 #include <EditorGUI/Hierarchy.h>
-#include <imgui.h>
+#include "imgui/imgui.h"
 #include <EditorGUI/EditorGUI.h>
 #include <EditorGUI/Selection.h>
 
-namespace BorderlessEngineEditor
+namespace BorderlessEditor
 {
 	Hierarchy::Hierarchy()
 	{
@@ -17,7 +17,7 @@ namespace BorderlessEngineEditor
 			{
 				if (ImGui::MenuItem("GameObject"))
 				{
-					BorderlessEngineEditor::EditorGUI::CreateNewGameObject();
+					BorderlessEditor::EditorGUI::CreateNewGameObject();
 				}
 				ImGui::EndMenu();
 			}
@@ -30,11 +30,11 @@ namespace BorderlessEngineEditor
 		{
 			auto obj = objs[i];
 			ImGuiTreeNodeFlags node_flags = base_flags;
-			if (BorderlessEngineEditor::Selection::current == obj) node_flags |= ImGuiTreeNodeFlags_Selected;
+			if (BorderlessEditor::Selection::current == obj) node_flags |= ImGuiTreeNodeFlags_Selected;
 			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, obj->name);
 			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 			{
-				BorderlessEngineEditor::Selection::current = obj;
+				BorderlessEditor::Selection::current = obj;
 			}
 			if (node_open)
 			{

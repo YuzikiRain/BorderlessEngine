@@ -1,7 +1,6 @@
 #pragma once
 #include "glad/glad.h"
-#include "GLFW/include/glfw3.h"
-#include <list>
+#include "GLFW/glfw3.h"
 
 namespace BorderlessEngine
 {

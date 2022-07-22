@@ -1,10 +1,10 @@
-﻿#include <EditorGUI/Inspector.h>
-#include <EditorGUI/Selection.h>
-#include <GameObject.h>
-#include <imgui.h>
-#include <ECS/Component/MeshFilterComponent.h>
+﻿#include "EditorGUI/Inspector.h"
+#include "EditorGUI/Selection.h"
+#include "GameObject.h"
+#include "imgui.h"
+#include "Render/MeshFilterComponent.h"
 
-namespace BorderlessEngineEditor
+namespace BorderlessEditor
 {
 	const unsigned int nameLimit = 30;
 	Inspector::Inspector()

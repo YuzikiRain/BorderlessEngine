@@ -1,11 +1,11 @@
 #pragma once
 
-#include <imgui.h>
-#include <backends/imgui_impl_glfw.h>
-#include <backends/imgui_impl_opengl2.h>
-#include <backends/imgui_impl_opengl3.h>
+#include "imgui/imgui.h"
+#include "imgui/backends/imgui_impl_glfw.h"
+#include "imgui/backends/imgui_impl_opengl2.h"
+#include "imgui/backends/imgui_impl_opengl3.h"
 #include <stdio.h>
-//#include <Windows.h>
+#include <Windows.h>
 #include <tchar.h>
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
@@ -18,21 +18,24 @@
 #include <vector>
 
 // 所有需要的editorwindow子类
-#include<EditorGUI/Window.h>
-#include<EditorGUI/Inspector.h>
-#include<EditorGUI/Hierarchy.h>
+#include <EditorGUI/Window.h>
+#include <EditorGUI/Inspector.h>
+#include <EditorGUI/Hierarchy.h>
 #include <Scene.h>
 #include <yaml-cpp/yaml.h>
 #include <GameObject.h>
+#include "Entity.h"
 
 using namespace std;
 
-namespace BorderlessEngineEditor {
+namespace BorderlessEditor
+{
 	class EditorGUI
 	{
 	public:
-		static void InitImgui(GLFWwindow* window);
+		static void InitImgui(GLFWwindow *window);
 		static void DrawImgui();
+		static void Loop();
 		static void ShutDownEditorGUI();
 
 		/// <summary>
@@ -46,11 +49,12 @@ namespace BorderlessEngineEditor {
 		static void NewScene();
 		static void SaveScene();
 		static void CloseScene();
-		static vector<BorderlessEngine::GameObject*> GetAllGameObjects();
+		static vector<BorderlessEngine::GameObject *> GetAllGameObjects();
+
 	private:
-		static BorderlessEngineEditor::Inspector* inspector;
-		static BorderlessEngineEditor::Hierarchy* hierarchy;
-		static BorderlessEngine::Scene* currentScene;
-		static vector<BorderlessEngineEditor::Window*> windows;
+		static BorderlessEditor::Inspector *inspector;
+		static BorderlessEditor::Hierarchy *hierarchy;
+		static BorderlessEngine::Scene *currentScene;
+		static vector<BorderlessEditor::Window *> windows;
 	};
 }

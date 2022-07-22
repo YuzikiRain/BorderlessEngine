@@ -1,7 +1,7 @@
 #pragma once
 #include "Object.h"
 
-namespace BorderlessEngineEditor
+namespace BorderlessEditor
 {
 	class Selection
 	{

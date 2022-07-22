@@ -2,7 +2,7 @@
 #include <EditorGUI/Selection.h>
 #include <Object.h>
 
-namespace BorderlessEngineEditor
+namespace BorderlessEditor
 {
 	BorderlessEngine::Object* Selection::current;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <EditorGUI/Window.h>
 
-namespace BorderlessEngineEditor
+namespace BorderlessEditor
 {
 	class Inspector : public Window
 	{

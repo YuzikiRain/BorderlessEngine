@@ -1,7 +1,7 @@
 #include<EditorGUI/Window.h>
 #include <imgui.h>
 
-namespace BorderlessEngineEditor
+namespace BorderlessEditor
 {
 	void Window::Open()
 	{

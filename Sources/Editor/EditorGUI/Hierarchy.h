@@ -2,7 +2,7 @@
 #include <EditorGUI/Window.h>
 #include <EditorGUI/Selection.h>
 
-namespace BorderlessEngineEditor
+namespace BorderlessEditor
 {
 	class Hierarchy : public Window
 	{
