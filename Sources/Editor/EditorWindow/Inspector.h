@@ -1,9 +1,9 @@
 #pragma once
-#include <EditorGUI/Window.h>
+#include <EditorWindow/EditorWindow.h>
 
 namespace BorderlessEditor
 {
-	class Inspector : public Window
+	class Inspector : public EditorWindow
 	{
 	public:
 		Inspector();

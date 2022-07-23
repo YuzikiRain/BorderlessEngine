@@ -1,7 +1,7 @@
-#include <EditorGUI/Hierarchy.h>
+#include "EditorWindow/Hierarchy.h"
+#include "EditorSceneManager.h"
 #include "imgui/imgui.h"
-#include <EditorGUI/EditorGUI.h>
-#include <EditorGUI/Selection.h>
+#include "Selection.h"
 
 namespace BorderlessEditor
 {
@@ -17,7 +17,7 @@ namespace BorderlessEditor
 			{
 				if (ImGui::MenuItem("GameObject"))
 				{
-					BorderlessEditor::EditorGUI::CreateNewGameObject();
+					BorderlessEditor::EditorSceneManager::CreateNewGameObject();
 				}
 				ImGui::EndMenu();
 			}
@@ -25,7 +25,7 @@ namespace BorderlessEditor
 		}
 
 		static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
-		auto objs = EditorGUI::GetAllGameObjects();
+		auto objs = BorderlessEditor::EditorSceneManager::GetAllGameObjects();
 		for (size_t i = 0; i < objs.size(); i++)
 		{
 			auto obj = objs[i];

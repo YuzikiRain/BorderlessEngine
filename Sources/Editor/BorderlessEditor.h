@@ -1,9 +1,6 @@
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+
 namespace BorderlessEditor
 {
-	void Launch();
-	bool InitializeWindow();
-	void InitSystems();
-	void InitEditor();
-	void GameLoop();
-	void Quit();
 }

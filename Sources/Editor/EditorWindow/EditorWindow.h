@@ -2,7 +2,7 @@
 
 namespace BorderlessEditor
 {
-	class Window
+	class EditorWindow
 	{
 	public:
 		virtual void Open();

@@ -1,9 +1,7 @@
-#include "BorderlessEditor.h"
+#include "EditorLauncher.h"
 
 int main()
 {
-    BorderlessEditor::Launch();
-
+    BorderlessEditor::EditorLauncher::Launch();
     return 0;
 }
-

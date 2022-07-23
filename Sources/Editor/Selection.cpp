@@ -1,6 +1,5 @@
-#pragma once
-#include <EditorGUI/Selection.h>
-#include <Object.h>
+#include "Selection.h"
+#include "Object.h"
 
 namespace BorderlessEditor
 {

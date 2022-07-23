@@ -1,5 +1,5 @@
-﻿#include "EditorGUI/Inspector.h"
-#include "EditorGUI/Selection.h"
+﻿#include "EditorWindow/Inspector.h"
+#include "Selection.h"
 #include "GameObject.h"
 #include "imgui.h"
 #include "Render/MeshFilterComponent.h"
