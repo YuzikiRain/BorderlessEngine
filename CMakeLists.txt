@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(borderlessengine)
 
+set(PACKAGE_PATH ${CMAKE_SOURCE_DIR}/Packages)
+
 # runtime
 set(borderlessengine_runtime borderlessengine_runtime)
 set(borderlessengine_runtime_directory ${PROJECT_SOURCE_DIR}/Sources/Runtime)

@@ -14,15 +14,8 @@ namespace BorderlessEditor
     class EditorWindowManager
     {
     public:
-        static void Init()
-        {
-            inspector = new Inspector();
-            windows.push_back(inspector);
-            hierarchy = new Hierarchy();
-            windows.push_back(hierarchy);
-        }
-
-        static std::vector<EditorWindow *> GetAllEditorwindows() { return windows; }
+        static std::vector<EditorWindow *> GetAllEditorwindows();
+        static void Init();
 
     private:
         static Inspector *inspector;
