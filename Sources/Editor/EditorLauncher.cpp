@@ -45,6 +45,7 @@ namespace BorderlessEditor
         std::cout << "BorderlessEditor launched" << std::endl;
 
         InitializeWindow();
+        EditorWindowManager::Init();
         InitImgui(window);
 
         Loop();
@@ -172,8 +173,7 @@ namespace BorderlessEditor
         //     ImGui::End();
         // }
 
-        auto windows = EditorWindowManager::GetAllEditorwindows();
-
+        auto editorWindows = *EditorWindowManager::GetAllEditorwindows();
         // 主菜单
         if (ImGui::BeginMainMenuBar())
         {
@@ -195,12 +195,12 @@ namespace BorderlessEditor
             }
             if (ImGui::BeginMenu("EditorWindow"))
             {
-                for (size_t i = 0; i < windows.size(); i++)
+                for (size_t i = 0; i < editorWindows.size(); i++)
                 {
-                    EditorWindow &window = (*windows[i]);
-                    if (ImGui::MenuItem(window.name))
+                    EditorWindow &editorWindow = *(editorWindows[i]);
+                    if (ImGui::MenuItem(editorWindow.name))
                     {
-                        window.Open();
+                        editorWindow.Open();
                     }
                 }
 
@@ -210,14 +210,14 @@ namespace BorderlessEditor
         }
 
         // 更新所有window
-        for (size_t i = 0; i < windows.size(); i++)
+        for (size_t i = 0; i < editorWindows.size(); i++)
         {
-            EditorWindow &window = (*windows[i]);
-            if (window.isOpen)
+            EditorWindow &editorWindow = *(editorWindows[i]);
+            if (editorWindow.isOpen)
             {
-                window.BeginDraw();
-                window.Draw();
-                window.EndDraw();
+                editorWindow.BeginDraw();
+                editorWindow.Draw();
+                editorWindow.EndDraw();
             }
         }
 

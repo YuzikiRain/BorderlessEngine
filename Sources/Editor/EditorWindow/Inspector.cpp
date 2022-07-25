@@ -10,15 +10,18 @@ namespace BorderlessEditor
 	Inspector::Inspector()
 	{
 		name = "Inspector";
+		isOpen = false;
 	}
 
-	void  Inspector::Draw()
+	void Inspector::Draw()
 	{
-		if (Selection::current == NULL) return;
-		BorderlessEngine::GameObject* obj = static_cast<BorderlessEngine::GameObject*>(Selection::current);
+		if (Selection::current == NULL)
+			return;
+		BorderlessEngine::GameObject *obj = static_cast<BorderlessEngine::GameObject *>(Selection::current);
 
 		// 右键添加组件
-		if (ImGui::BeginPopupContextWindow()) {
+		if (ImGui::BeginPopupContextWindow())
+		{
 			if (ImGui::BeginMenu("Add Component"))
 			{
 				if (ImGui::MenuItem("MeshFilter Component"))
@@ -29,7 +32,6 @@ namespace BorderlessEditor
 			}
 			ImGui::EndPopup();
 		}
-
 
 		ImGui::Checkbox("##isActive", &obj->isActive);
 		// 横向布局

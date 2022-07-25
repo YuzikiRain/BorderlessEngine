@@ -1,7 +1,7 @@
 #include "EditorSceneManager.h"
 #include "Scene.h"
 #include <fstream>
-// #include "yaml-cpp/yaml.h"
+#include "yaml-cpp/yaml.h"
 #include <shobjidl.h>
 #include <string>
 
@@ -15,7 +15,7 @@ using Scene = BorderlessEngine::Scene;
 
 namespace BorderlessEditor
 {
-    Scene *EditorSceneManager::currentScene = 0;
+    Scene *EditorSceneManager::currentScene;
 
     std::string EditorSceneManager::LoadFile()
     {
@@ -53,52 +53,52 @@ namespace BorderlessEditor
 
     void EditorSceneManager::OpenScene()
     {
-        // auto path = LoadFile();
-        // if (path.empty())
-        //     return;
+        auto path = LoadFile();
+        if (path.empty())
+            return;
 
-        // CloseScene();
+        CloseScene();
 
         // char pathBuffer[255];
         // WideCharToMultiByte(CP_ACP, 0, path, -1, pathBuffer, sizeof(pathBuffer), NULL, NULL);
 
-        // YAML::Node sceneData = YAML::LoadFile(path);
-        // auto objs = vector<BorderlessEngine::GameObject *>();
+        YAML::Node sceneData = YAML::LoadFile(path);
+        auto objs = vector<BorderlessEngine::GameObject *>();
 
-        // for (size_t i = 0; i < sceneData["gameObjects"].size(); i++)
-        // {
-        //     auto name = sceneData["gameObjects"][i]["name"].as<string>();
-        //     objs.push_back(
-        //         new BorderlessEngine::GameObject(
-        //             name.c_str(),
-        //             sceneData["gameObjects"][i]["isActive"].as<bool>()));
-        // }
-        // currentScene = new BorderlessEngine::Scene("scene", objs);
+        for (size_t i = 0; i < sceneData["gameObjects"].size(); i++)
+        {
+            auto name = sceneData["gameObjects"][i]["name"].as<string>();
+            objs.push_back(
+                new BorderlessEngine::GameObject(
+                    name.c_str(),
+                    sceneData["gameObjects"][i]["isActive"].as<bool>()));
+        }
+        currentScene = new BorderlessEngine::Scene("scene", objs);
     }
 
     void EditorSceneManager::SaveScene()
     {
-        // // auto path = _cast<std::string>(SaveFile());
-        // auto path = SaveFile();
-        // if (path.empty())
-        //     return;
+        // auto path = _cast<std::string>(SaveFile());
+        auto path = SaveFile();
+        if (path.empty())
+            return;
 
-        // // char pathBuffer[255];
-        // // WideCharToMultiByte(CP_ACP, 0, path, -1, pathBuffer, sizeof(pathBuffer), NULL, NULL);
+        // char pathBuffer[255];
+        // WideCharToMultiByte(CP_ACP, 0, path, -1, pathBuffer, sizeof(pathBuffer), NULL, NULL);
 
-        // fstream sceneFileStream;
-        // sceneFileStream.open(path, ios::out | ios::trunc);
-        // YAML::Node scene;
-        // auto objs = currentScene->GetAllGameObjects();
-        // for (size_t i = 0; i < objs.size(); i++)
-        // {
-        //     auto obj = objs[i];
-        //     scene["gameObjects"][i]["name"] = obj->name;
-        //     scene["gameObjects"][i]["isActive"] = obj->isActive;
-        // }
+        fstream sceneFileStream;
+        sceneFileStream.open(path, ios::out | ios::trunc);
+        YAML::Node scene;
+        auto objs = currentScene->GetAllGameObjects();
+        for (size_t i = 0; i < objs.size(); i++)
+        {
+            auto obj = objs[i];
+            scene["gameObjects"][i]["name"] = obj->name;
+            scene["gameObjects"][i]["isActive"] = obj->isActive;
+        }
 
-        // sceneFileStream << scene;
-        // sceneFileStream.close();
+        sceneFileStream << scene;
+        sceneFileStream.close();
     }
 
     void EditorSceneManager::CloseScene()

@@ -8,8 +8,9 @@ namespace BorderlessEditor
 	Hierarchy::Hierarchy()
 	{
 		name = "Hierarchy";
+		isOpen = false;
 	}
-	void  Hierarchy::Draw()
+	void Hierarchy::Draw()
 	{
 		if (ImGui::BeginPopupContextWindow())
 		{
@@ -30,8 +31,9 @@ namespace BorderlessEditor
 		{
 			auto obj = objs[i];
 			ImGuiTreeNodeFlags node_flags = base_flags;
-			if (BorderlessEditor::Selection::current == obj) node_flags |= ImGuiTreeNodeFlags_Selected;
-			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, obj->name);
+			if (BorderlessEditor::Selection::current == obj)
+				node_flags |= ImGuiTreeNodeFlags_Selected;
+			bool node_open = ImGui::TreeNodeEx((void *)(intptr_t)i, node_flags, obj->name);
 			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 			{
 				BorderlessEditor::Selection::current = obj;
@@ -51,13 +53,13 @@ namespace BorderlessEditor
 				if (i == 0)
 					ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 
-				if (ImGui::TreeNode((void*)(intptr_t)i, "Child %d", i))
+				if (ImGui::TreeNode((void *)(intptr_t)i, "Child %d", i))
 				{
-					//Selection::current = ;
+					// Selection::current = ;
 					if (ImGui::BeginPopupContextItem())
 					{
 						ImGui::Text("Edit name:");
-						//ImGui::InputText("##edit", name, IM_ARRAYSIZE(name));
+						// ImGui::InputText("##edit", name, IM_ARRAYSIZE(name));
 						if (ImGui::Button("Close"))
 							ImGui::CloseCurrentPopup();
 						ImGui::EndPopup();

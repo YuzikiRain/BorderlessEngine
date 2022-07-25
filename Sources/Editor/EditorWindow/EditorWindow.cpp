@@ -1,4 +1,4 @@
-#include<EditorWindow/EditorWindow.h>
+#include <EditorWindow/EditorWindow.h>
 #include "imgui/imgui.h"
 #include "imgui/backends/imgui_impl_glfw.h"
 #include "imgui/backends/imgui_impl_opengl2.h"
@@ -33,6 +33,6 @@ namespace BorderlessEditor
 	{
 		ImGui::End();
 	}
-	const char* name = "EditorWindow";
-	bool  isOpen;
+	const char *name = "EditorWindow";
+	bool isOpen = false;
 }

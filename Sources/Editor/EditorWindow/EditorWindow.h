@@ -10,6 +10,6 @@ namespace BorderlessEditor
 		virtual void Draw();
 		void EndDraw();
 		const char* name = "Window";
-		bool  isOpen;
+		bool isOpen;
 	};
 }
