@@ -29,20 +29,8 @@ set(GLAD_SRC ${PACKAGE_SOURCE_PATH}/glad)
 list(APPEND PROJECT_SOURCE ${GLAD_SRC}/glad.c)
 
 # yaml
-# list(APPEND PROJECT_LIBRARIES ${PACKAGE_LIBRARY_PATH}/yaml-cpp/yaml-cpp.dll)
-# list(APPEND PROJECT_INCLUDE ${PACKAGE_INCLUDE_PATH}/yaml-cpp)
-
-# 通过子目录
-add_subdirectory(${PACKAGE_INCLUDE_PATH}/yaml-cpp ${CMAKE_BINARY_DIR}/yaml-cpp)
-list(APPEND PROJECT_LIBRARIES yaml-cpp)
-list(APPEND PROJECT_INCLUDE ${PACKAGE_LIBRARY_PATH}/yaml-cpp)
-
-# set(yaml-cpp_DIR ${PACKAGE_PATH}/yaml-cpp/build)
-# set(YAML_CPP_INCLUDE_DIR ${PACKAGE_PATH}/yaml-cpp/include)
-# find_package(yaml-cpp)
-# message(STATUS "Used config file: ${yaml-cpp_CONFIG}")
-# include_directories(${YAMLCPP_INCLUDE_DIRS})
-
+list(APPEND PROJECT_LIBRARIES ${PACKAGE_LIBRARY_PATH}/yaml-cpp/libyaml-cpp.dll)
+list(APPEND PROJECT_INCLUDE ${PACKAGE_INCLUDE_PATH}/yaml-cpp)
 
 # opengl 这个是必须的！imgui依赖opengl
 list (APPEND PROJECT_LIBRARIES ${OPENGL_LIBRARIES})
@@ -67,4 +55,3 @@ file (GLOB_RECURSE BORDERLESSENGINE_RUNTIME_SOURCE ${BORDERLESSENGINE_RUNTIME_PA
 add_library(${PROJECT_NAME} STATIC ${BORDERLESSENGINE_RUNTIME_SOURCE} ${PROJECT_SOURCE} ${Module_SOURCE})
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_INCLUDE})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${YAMLCPP_LIBRARIES})

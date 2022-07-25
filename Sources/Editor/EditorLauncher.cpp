@@ -40,6 +40,11 @@ namespace BorderlessEditor
         return 1.0 / targetFrameRate;
     }
 
+    GLFWwindow *EditorLauncher::GetGLFWWindow()
+    {
+        return EditorLauncher::window;
+    }
+
     void EditorLauncher::Launch()
     {
         std::cout << "BorderlessEditor launched" << std::endl;

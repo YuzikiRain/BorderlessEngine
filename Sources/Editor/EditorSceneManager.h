@@ -17,14 +17,15 @@ namespace BorderlessEditor
     class EditorSceneManager
     {
     public:
-        static std::string LoadFile();
-        static std::string SaveFile();
+        static std::string LoadFile(const char *filter);
+        static std::string SaveFile(const char *filter);
         static void NewScene();
         static void OpenScene();
         static void SaveScene();
         static void CloseScene();
         static void CreateNewGameObject();
         static vector<BorderlessEngine::GameObject *> GetAllGameObjects();
+
     private:
         static Scene *currentScene;
     };

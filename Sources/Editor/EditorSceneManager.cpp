@@ -1,29 +1,39 @@
 #include "EditorSceneManager.h"
 #include "Scene.h"
 #include <fstream>
+// yaml-cpp
 #include "yaml-cpp/yaml.h"
 #include <shobjidl.h>
 #include <string>
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+// 打开文件对话框
 #include <commdlg.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include "GLFW/glfw3native.h"
+
+#include "EditorLauncher.h"
 
 using Scene = BorderlessEngine::Scene;
 
 namespace BorderlessEditor
 {
+    const char *sceneFilter = "Scene (*.scene)\0*.scene\0";
+    const char *sceneFileExtension = "scene";
     Scene *EditorSceneManager::currentScene;
 
-    std::string EditorSceneManager::LoadFile()
+    std::string EditorSceneManager::LoadFile(const char *filter)
     {
         OPENFILENAMEA ofn;
         CHAR szFile[260] = {0};
         ZeroMemory(&ofn, sizeof(OPENFILENAME));
         ofn.lStructSize = sizeof(OPENFILENAME);
+        ofn.hwndOwner = glfwGetWin32Window(EditorLauncher::GetGLFWWindow());
         ofn.lpstrFile = szFile;
+        ofn.nMaxFile = sizeof(szFile);
+        ofn.lpstrFilter = filter;
+        ofn.nFilterIndex = 1;
         ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
         if (GetOpenFileNameA(&ofn) == TRUE)
             return ofn.lpstrFile;
@@ -31,13 +41,18 @@ namespace BorderlessEditor
             return std::string();
     }
 
-    std::string EditorSceneManager::SaveFile()
+    std::string EditorSceneManager::SaveFile(const char *filter)
     {
         OPENFILENAMEA ofn;
         CHAR szFile[260] = {0};
         ZeroMemory(&ofn, sizeof(OPENFILENAME));
         ofn.lStructSize = sizeof(OPENFILENAME);
+        ofn.hwndOwner = glfwGetWin32Window(EditorLauncher::GetGLFWWindow());
         ofn.lpstrFile = szFile;
+        ofn.nMaxFile = sizeof(szFile);
+        ofn.lpstrFilter = filter;
+        ofn.nFilterIndex = 1;
+        ofn.lpstrDefExt = sceneFileExtension;
         ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
         if (GetSaveFileNameA(&ofn) == TRUE)
             return ofn.lpstrFile;
@@ -53,14 +68,11 @@ namespace BorderlessEditor
 
     void EditorSceneManager::OpenScene()
     {
-        auto path = LoadFile();
+        auto path = LoadFile(sceneFilter);
         if (path.empty())
             return;
 
         CloseScene();
-
-        // char pathBuffer[255];
-        // WideCharToMultiByte(CP_ACP, 0, path, -1, pathBuffer, sizeof(pathBuffer), NULL, NULL);
 
         YAML::Node sceneData = YAML::LoadFile(path);
         auto objs = vector<BorderlessEngine::GameObject *>();
@@ -78,13 +90,9 @@ namespace BorderlessEditor
 
     void EditorSceneManager::SaveScene()
     {
-        // auto path = _cast<std::string>(SaveFile());
-        auto path = SaveFile();
+        auto path = SaveFile(sceneFilter);
         if (path.empty())
             return;
-
-        // char pathBuffer[255];
-        // WideCharToMultiByte(CP_ACP, 0, path, -1, pathBuffer, sizeof(pathBuffer), NULL, NULL);
 
         fstream sceneFileStream;
         sceneFileStream.open(path, ios::out | ios::trunc);
