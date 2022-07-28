@@ -20,7 +20,7 @@ namespace BorderlessEditor
 {
     void framebuffer_size_callback(GLFWwindow *window, int width, int height)
     {
-        // glViewport(0, 0, width, height);
+        glViewport(0, 0, width, height);
     }
 
     const unsigned int SCR_WIDTH = 800;
@@ -33,7 +33,7 @@ namespace BorderlessEditor
     double timeScale = 1.0;
     double targetTime = 0.0;
 
-    GLFWwindow *EditorLauncher::window = 0;
+    GLFWwindow *EditorLauncher::glfwWindow = 0;
 
     double GetFrameInterval()
     {
@@ -42,7 +42,7 @@ namespace BorderlessEditor
 
     GLFWwindow *EditorLauncher::GetGLFWWindow()
     {
-        return EditorLauncher::window;
+        return EditorLauncher::glfwWindow;
     }
 
     void EditorLauncher::Launch()
@@ -51,12 +51,12 @@ namespace BorderlessEditor
 
         InitializeWindow();
         EditorWindowManager::Init();
-        InitImgui(window);
+        InitImgui(glfwWindow);
 
         Loop();
 
         DestroyImgui();
-        glfwDestroyWindow(window);
+        glfwDestroyWindow(glfwWindow);
         glfwTerminate();
     }
 
@@ -67,14 +67,14 @@ namespace BorderlessEditor
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-        if (window == NULL)
+        glfwWindow = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+        if (glfwWindow == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
             glfwTerminate();
             return -1;
         }
-        glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(glfwWindow);
 
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
@@ -84,59 +84,49 @@ namespace BorderlessEditor
 
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        glfwSetFramebufferSizeCallback(glfwWindow, framebuffer_size_callback);
 
         return 0;
     }
 
     void EditorLauncher::Loop()
     {
-        while (!glfwWindowShouldClose(window))
+        while (!glfwWindowShouldClose(glfwWindow))
         {
-            // glfw提供的输入
-            glfwPollEvents();
-            // processInput(window);
-
-            // 开启深度测试
-            glEnable(GL_DEPTH_TEST);
-            //// 开启剔除
-            // glEnable(GL_CULL_FACE);
-            //// 开启背面剔除
-            // glCullFace(GL_BACK);
-            //  线框模式
-            // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-            // 清屏
-            glClearColor(0, 0, .4, 0);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+            // 输入
+            Input();
+            // 渲染
+            Render();
             // 绘制编辑器UI
             DrawImgui();
-
             // 交换缓冲区
-            glfwSwapBuffers(window);
-
-            double currentTime = glfwGetTime();
-            if (currentTime < targetTime)
-                continue;
-            frameTime = currentTime - realTime;
-            realTime = currentTime;
-
-            // accumulator += frameTime;
-            //// 模拟时间间隔，剩余的未模拟时间会累计到下一帧
-            // while (accumulator < currentTime)
-            //{
-            //	InputSystem::FixedUpdate();
-            //	accumulator += interval;
-            // }
-
-            targetTime += GetFrameInterval();
-            // 休眠剩余到下一次Update的时间
-            if (currentTime < targetTime)
-            {
-                std::this_thread::sleep_for(std::chrono::milliseconds((long)((targetTime - currentTime) * 1000)));
-            }
+            glfwSwapBuffers(glfwWindow);
+            // 剩余的时间进行线程休眠，不进行多余的计算
+            WaitForNextFrame();
         }
+    }
+
+    void EditorLauncher::Input()
+    {
+        // glfw提供的输入
+        glfwPollEvents();
+        // processInput(window);
+    }
+
+    void EditorLauncher::Render()
+    {
+        // 开启深度测试
+        glEnable(GL_DEPTH_TEST);
+        //// 开启剔除
+        // glEnable(GL_CULL_FACE);
+        //// 开启背面剔除
+        // glCullFace(GL_BACK);
+        //  线框模式
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        // 清屏
+        glClearColor(0, 0, .7, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     void EditorLauncher::InitImgui(GLFWwindow *window)
@@ -198,7 +188,7 @@ namespace BorderlessEditor
                 }
                 ImGui::EndMenu();
             }
-            if (ImGui::BeginMenu("EditorWindow"))
+            if (ImGui::BeginMenu("Window"))
             {
                 for (size_t i = 0; i < editorWindows.size(); i++)
                 {
@@ -237,7 +227,7 @@ namespace BorderlessEditor
         //	w.EndDraw();
         // }
 
-        ImGui::ShowDemoWindow();
+        // ImGui::ShowDemoWindow();
 
         // Rendering
         ImGui::Render();
@@ -249,6 +239,30 @@ namespace BorderlessEditor
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
+    }
+
+    void EditorLauncher::WaitForNextFrame()
+    {
+        double currentTime = glfwGetTime();
+        if (currentTime < targetTime)
+            return;
+        frameTime = currentTime - realTime;
+        realTime = currentTime;
+
+        // accumulator += frameTime;
+        //// 模拟时间间隔，剩余的未模拟时间会累计到下一帧
+        // while (accumulator < currentTime)
+        //{
+        //	InputSystem::FixedUpdate();
+        //	accumulator += interval;
+        // }
+
+        targetTime += GetFrameInterval();
+        // 休眠剩余到下一次Update的时间
+        if (currentTime < targetTime)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds((long)((targetTime - currentTime) * 1000)));
+        }
     }
 
 }
