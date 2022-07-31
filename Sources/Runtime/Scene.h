@@ -1,11 +1,12 @@
 #pragma once
 #include "GameObject.h"
+#include "Object.h"
 #include <vector>
 using namespace std;
 
 namespace BorderlessEngine
 {
-	class Scene
+	class Scene : public Object
 	{
 	public:
 		Scene();

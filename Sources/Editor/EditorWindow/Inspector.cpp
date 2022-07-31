@@ -2,7 +2,8 @@
 #include "Selection.h"
 #include "GameObject.h"
 #include "imgui.h"
-#include "Render/MeshFilterComponent.h"
+#include "Render/MeshFilter.h"
+#include "Render/MeshRenderer.h"
 
 namespace BorderlessEditor
 {
@@ -24,9 +25,13 @@ namespace BorderlessEditor
 		{
 			if (ImGui::BeginMenu("Add Component"))
 			{
-				if (ImGui::MenuItem("MeshFilter Component"))
+				if (ImGui::MenuItem("MeshFilter"))
 				{
-					obj->AddComponent<BorderlessEngine::MeshFilterComponent>();
+					obj->AddComponent<BorderlessEngine::MeshFilter>();
+				}
+				if (ImGui::MenuItem("MeshRenderer"))
+				{
+					obj->AddComponent<BorderlessEngine::MeshRenderer>();
 				}
 				ImGui::EndMenu();
 			}
@@ -43,7 +48,7 @@ namespace BorderlessEditor
 		ImGui::Spacing();
 
 		// 绘制物体的组件
-		auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilterComponent>();
+		auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
 		if (meshFilter != NULL)
 		{
 			ImGui::Text("MeshFilter");

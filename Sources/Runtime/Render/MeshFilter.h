@@ -4,10 +4,10 @@
 
 namespace BorderlessEngine
 {
-	class MeshFilterComponent : public Component
+	class MeshFilter : public Component
 	{
 	public:
-		MeshFilterComponent();
+		MeshFilter();
 		//Mesh mesh;
 	};
 }

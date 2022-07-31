@@ -8,12 +8,9 @@
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-// 打开文件对话框
-#include <commdlg.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include "GLFW/glfw3native.h"
 
 #include "EditorLauncher.h"
+#include "FileUtility.h"
 
 using Scene = BorderlessEngine::Scene;
 
@@ -23,43 +20,6 @@ namespace BorderlessEditor
     const char *sceneFileExtension = "scene";
     Scene *EditorSceneManager::currentScene;
 
-    std::string EditorSceneManager::LoadFile(const char *filter)
-    {
-        OPENFILENAMEA ofn;
-        CHAR szFile[260] = {0};
-        ZeroMemory(&ofn, sizeof(OPENFILENAME));
-        ofn.lStructSize = sizeof(OPENFILENAME);
-        ofn.hwndOwner = glfwGetWin32Window(EditorLauncher::GetGLFWWindow());
-        ofn.lpstrFile = szFile;
-        ofn.nMaxFile = sizeof(szFile);
-        ofn.lpstrFilter = filter;
-        ofn.nFilterIndex = 1;
-        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-        if (GetOpenFileNameA(&ofn) == TRUE)
-            return ofn.lpstrFile;
-        else
-            return std::string();
-    }
-
-    std::string EditorSceneManager::SaveFile(const char *filter)
-    {
-        OPENFILENAMEA ofn;
-        CHAR szFile[260] = {0};
-        ZeroMemory(&ofn, sizeof(OPENFILENAME));
-        ofn.lStructSize = sizeof(OPENFILENAME);
-        ofn.hwndOwner = glfwGetWin32Window(EditorLauncher::GetGLFWWindow());
-        ofn.lpstrFile = szFile;
-        ofn.nMaxFile = sizeof(szFile);
-        ofn.lpstrFilter = filter;
-        ofn.nFilterIndex = 1;
-        ofn.lpstrDefExt = sceneFileExtension;
-        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-        if (GetSaveFileNameA(&ofn) == TRUE)
-            return ofn.lpstrFile;
-        else
-            return std::string();
-    }
-
     void EditorSceneManager::NewScene()
     {
         CloseScene();
@@ -68,7 +28,7 @@ namespace BorderlessEditor
 
     void EditorSceneManager::OpenScene()
     {
-        auto path = LoadFile(sceneFilter);
+        auto path = FileUtility::OpenFileDialogue(sceneFilter, sceneFileExtension);
         if (path.empty())
             return;
 
@@ -90,7 +50,7 @@ namespace BorderlessEditor
 
     void EditorSceneManager::SaveScene()
     {
-        auto path = SaveFile(sceneFilter);
+        auto path = FileUtility::SaveFileDialogue(sceneFilter, sceneFileExtension);
         if (path.empty())
             return;
 
@@ -112,6 +72,11 @@ namespace BorderlessEditor
     void EditorSceneManager::CloseScene()
     {
         delete currentScene;
+    }
+
+    Scene *EditorSceneManager::GetCurrentScene()
+    {
+        return currentScene;
     }
 
     void EditorSceneManager::CreateNewGameObject()

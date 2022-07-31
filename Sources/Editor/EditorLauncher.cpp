@@ -1,4 +1,5 @@
 #include "EditorLauncher.h"
+#include "Core/GLFWUtility.h"
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -18,11 +19,6 @@
 
 namespace BorderlessEditor
 {
-    void framebuffer_size_callback(GLFWwindow *window, int width, int height)
-    {
-        glViewport(0, 0, width, height);
-    }
-
     const unsigned int SCR_WIDTH = 800;
     const unsigned int SCR_HEIGHT = 600;
 
@@ -33,23 +29,17 @@ namespace BorderlessEditor
     double timeScale = 1.0;
     double targetTime = 0.0;
 
-    GLFWwindow *EditorLauncher::glfwWindow = 0;
-
     double GetFrameInterval()
     {
         return 1.0 / targetFrameRate;
-    }
-
-    GLFWwindow *EditorLauncher::GetGLFWWindow()
-    {
-        return EditorLauncher::glfwWindow;
     }
 
     void EditorLauncher::Launch()
     {
         std::cout << "BorderlessEditor launched" << std::endl;
 
-        InitializeWindow();
+        BorderlessEngine::GLFWManager::Initialize(SCR_WIDTH, SCR_HEIGHT);
+        auto glfwWindow = BorderlessEngine::GLFWManager::GetGLFWWindow();
         EditorWindowManager::Init();
         InitImgui(glfwWindow);
 
@@ -60,37 +50,9 @@ namespace BorderlessEditor
         glfwTerminate();
     }
 
-    bool EditorLauncher::InitializeWindow()
-    {
-        glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-        glfwWindow = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-        if (glfwWindow == NULL)
-        {
-            std::cout << "Failed to create GLFW window" << std::endl;
-            glfwTerminate();
-            return -1;
-        }
-        glfwMakeContextCurrent(glfwWindow);
-
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        {
-            std::cout << "Failed to initialize GLAD" << std::endl;
-            return -1;
-        }
-
-        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-
-        glfwSetFramebufferSizeCallback(glfwWindow, framebuffer_size_callback);
-
-        return 0;
-    }
-
     void EditorLauncher::Loop()
     {
+        auto glfwWindow = BorderlessEngine::GLFWManager::GetGLFWWindow();
         while (!glfwWindowShouldClose(glfwWindow))
         {
             // 输入
@@ -135,10 +97,6 @@ namespace BorderlessEditor
         ImGui::StyleColorsDark();                   // Setup Dear ImGui style
         ImGui_ImplGlfw_InitForOpenGL(window, true); // Setup Platform/Renderer backends
         ImGui_ImplOpenGL3_Init("#version 450");
-
-        bool show_demo_window = true;
-        bool show_another_window = false;
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
         // 启用docking
         ImGui::GetIO().ConfigFlags = ImGuiConfigFlags_DockingEnable;
@@ -227,7 +185,7 @@ namespace BorderlessEditor
         //	w.EndDraw();
         // }
 
-        // ImGui::ShowDemoWindow();
+        ImGui::ShowDemoWindow();
 
         // Rendering
         ImGui::Render();

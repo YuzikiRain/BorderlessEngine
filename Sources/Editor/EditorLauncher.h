@@ -7,11 +7,10 @@ namespace BorderlessEditor
     {
     public:
         static void Launch();
-        static GLFWwindow *GetGLFWWindow();
+
 
     private:
-        static GLFWwindow *glfwWindow;
-        static bool InitializeWindow();
+
         static void Loop();
         static void Input();
         static void Render();
