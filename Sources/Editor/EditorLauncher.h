@@ -8,15 +8,10 @@ namespace BorderlessEditor
     public:
         static void Launch();
 
-
     private:
-
         static void Loop();
         static void Input();
         static void Render();
-        static void InitImgui(GLFWwindow *window);
-        static void DrawImgui();
-        static void DestroyImgui();
         static void WaitForNextFrame();
     };
 }
