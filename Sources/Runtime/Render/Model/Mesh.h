@@ -5,35 +5,39 @@
 #include <string>
 #include <vector>
 #include "Render/Shader.h"
+#include "Object.h"
 
 using namespace std;
 
-struct Vertex
+namespace BorderlessEngine
 {
-	glm::vec3 Position;
-	glm::vec3 Normal;
-	glm::vec2 TexCoords;
-};
+	struct Vertex
+	{
+		glm::vec3 Position;
+		glm::vec3 Normal;
+		glm::vec2 TexCoords;
+	};
 
-struct Texture
-{
-	unsigned int id;
-	string type;
-	string path;
-};
+	struct Texture
+	{
+		unsigned int id;
+		string type;
+		string path;
+	};
 
-class Mesh
-{
-public:
-	vector<Vertex> vertices;
-	vector<unsigned int> indices;
-	vector<Texture> textures;
+	class Mesh : public Object
+	{
+	public:
+		vector<Vertex> vertices;
+		vector<unsigned int> indices;
+		vector<Texture> textures;
 
-	Mesh();
-	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
-	void Draw(Shader shader);
+		Mesh();
+		Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+		void Draw(Shader shader);
 
-private:
-	unsigned int VAO, VBO, EBO;
-	void setupMesh();
-};
+	private:
+		unsigned int VAO, VBO, EBO;
+		void setupMesh();
+	};
+}

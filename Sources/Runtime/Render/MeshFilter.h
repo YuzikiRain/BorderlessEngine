@@ -8,6 +8,6 @@ namespace BorderlessEngine
 	{
 	public:
 		MeshFilter();
-		//Mesh mesh;
+		Mesh *Mesh;
 	};
 }
