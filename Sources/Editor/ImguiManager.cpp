@@ -8,8 +8,11 @@
 #include "imgui/backends/imgui_impl_opengl2.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
 
+#include <fstream>
 #include "EditorWindow/EditorWindowManager.h"
 #include "EditorSceneManager.h"
+#include "FileUtility.h"
+#include "yaml-cpp/yaml.h"
 
 namespace BorderlessEditor
 {
@@ -78,6 +81,33 @@ namespace BorderlessEditor
                         editorWindow.Open();
                     }
                 }
+
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("序列化mesh"))
+            {
+                const char *sceneFilter = "Scene (*.scene)\0*.scene\0";
+                const char *sceneFileExtension = "mesh";
+                auto path = FileUtility::SaveFileDialogue(sceneFilter, sceneFileExtension);
+                if (path.empty())
+                    return;
+
+
+
+                // fstream sceneFileStream;
+                // sceneFileStream.open(path, ios::out | ios::trunc);
+                // YAML::Node meshNode;
+                // auto objs = EditorSceneManager::GetCurrentScene()->GetAllGameObjects();
+                // for (size_t i = 0; i < objs.size(); i++)
+                // {
+                //     auto obj = objs[i];
+                //     scene["gameObjects"][i]["name"] = obj->name;
+                //     scene["gameObjects"][i]["isActive"] = obj->isActive;
+                // }
+
+                // sceneFileStream << scene;
+
+                // sceneFileStream.close();
 
                 ImGui::EndMenu();
             }

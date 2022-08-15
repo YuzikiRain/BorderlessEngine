@@ -1,6 +1,7 @@
 #pragma once
 #include "Model/Mesh.h"
 #include "Component.h"
+#include "Model/Model.h"
 
 namespace BorderlessEngine
 {
@@ -9,5 +10,6 @@ namespace BorderlessEngine
 	public:
 		MeshFilter();
 		Mesh *Mesh;
+		Model *Model;
 	};
 }

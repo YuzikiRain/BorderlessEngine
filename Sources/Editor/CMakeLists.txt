@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(borderlessengine_editor)
 
-# find_package ( OpenGL REQUIRED )
-
 set(PROJECT_LIBRARIES)
 set(PROJECT_INCLUDE)
 set(PROJECT_SOURCE)

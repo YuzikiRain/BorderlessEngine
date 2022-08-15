@@ -6,6 +6,8 @@
 #include "Render/MeshRenderer.h"
 #include "FileUtility.h"
 #include "yaml-cpp/yaml.h"
+#include "Render/Model/Mesh.h"
+#include "Render/Model/Model.h"
 
 namespace BorderlessEditor
 {
@@ -29,7 +31,14 @@ namespace BorderlessEditor
 			{
 				if (ImGui::MenuItem("MeshFilter"))
 				{
-					obj->AddComponent<BorderlessEngine::MeshFilter>();
+					const char *sceneFilter = "Scene (*.scene)\0*.scene\0";
+					const char *sceneFileExtension = "obj";
+					auto path = FileUtility::OpenFileDialogue(sceneFilter, sceneFileExtension);
+					if (path.empty())
+						return;
+
+					BorderlessEngine::MeshFilter *meshFilter = obj->AddComponent<BorderlessEngine::MeshFilter>();
+					meshFilter->Model = new BorderlessEngine::Model(path);
 				}
 				if (ImGui::MenuItem("MeshRenderer"))
 				{
@@ -63,19 +72,18 @@ namespace BorderlessEditor
 				string path = FileUtility::OpenFileDialogue(sceneFilter, sceneFileExtension);
 				if (!path.empty())
 				{
-					YAML::Node data = YAML::LoadFile(path);
-					Mesh mesh = new Mesh();
-					auto objs = vector<BorderlessEngine::GameObject *>();
-
-					for (size_t i = 0; i < data["gameObjects"].size(); i++)
-					{
-						auto name = data["gameObjects"][i]["name"].as<string>();
-						objs.push_back(
-							new BorderlessEngine::GameObject(
-								name.c_str(),
-								data["gameObjects"][i]["isActive"].as<bool>()));
-					}
-					currentScene = new BorderlessEngine::Scene("scene", objs);
+					// YAML::Node data = YAML::LoadFile(path);
+					// BorderlessEngine::Mesh *mesh = new BorderlessEngine::Mesh();
+					// mesh.
+					// for (size_t i = 0; i < data["gameObjects"].size(); i++)
+					// {
+					// 	auto name = data["gameObjects"][i]["name"].as<string>();
+					// 	objs.push_back(
+					// 		new BorderlessEngine::GameObject(
+					// 			name.c_str(),
+					// 			data["gameObjects"][i]["isActive"].as<bool>()));
+					// }
+					// currentScene = new BorderlessEngine::Scene("scene", objs);
 				}
 			}
 		}
