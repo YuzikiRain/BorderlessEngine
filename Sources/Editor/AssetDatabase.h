@@ -9,7 +9,7 @@ namespace BorderlessEditor
     {
     public:
         template <typename T>
-        static T LoadAssetAtPath<T>(string path)
+        static T LoadAssetAtPath<T>(std::string path)
         {
             
         }

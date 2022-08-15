@@ -8,6 +8,7 @@
 #include "yaml-cpp/yaml.h"
 #include "Render/Model/Mesh.h"
 #include "Render/Model/Model.h"
+#include <stdio.h>
 
 namespace BorderlessEditor
 {
@@ -31,7 +32,7 @@ namespace BorderlessEditor
 			{
 				if (ImGui::MenuItem("MeshFilter"))
 				{
-					const char *sceneFilter = "Scene (*.scene)\0*.scene\0";
+					const char *sceneFilter = "obj (*.obj)\0*.obj\0";
 					const char *sceneFileExtension = "obj";
 					auto path = FileUtility::OpenFileDialogue(sceneFilter, sceneFileExtension);
 					if (path.empty())
@@ -39,6 +40,7 @@ namespace BorderlessEditor
 
 					BorderlessEngine::MeshFilter *meshFilter = obj->AddComponent<BorderlessEngine::MeshFilter>();
 					meshFilter->Model = new BorderlessEngine::Model(path);
+					printf(meshFilter->Model->Name.c_str());
 				}
 				if (ImGui::MenuItem("MeshRenderer"))
 				{
@@ -63,8 +65,9 @@ namespace BorderlessEditor
 		if (meshFilter != NULL)
 		{
 			ImGui::Text("MeshFilter");
-			auto a = meshFilter->Mesh->Name;
-			ImGui::LabelText("MeshFilter.Reference", meshFilter->Mesh != NULL ? meshFilter->Mesh->Path.c_str() : "null");
+			ImGui::LabelText("MeshFilter.Reference", meshFilter->Model != NULL ? meshFilter->Model->Path.c_str() : "null");
+			// auto a = meshFilter->Mesh->Name;
+			// ImGui::LabelText("MeshFilter.Reference", meshFilter->Mesh != NULL ? meshFilter->Mesh->Path.c_str() : "null");
 			if (ImGui::Button("set"))
 			{
 				const char *sceneFilter = "Mesh (*.mesh)\0*.mesh\0";

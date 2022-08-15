@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "Component.h"
 #include <list>
+#include <typeinfo>
 
 namespace BorderlessEngine
 {
@@ -14,6 +15,10 @@ namespace BorderlessEngine
 		TComponent *AddComponent()
 		{
 			TComponent *component = new TComponent();
+			if (Object *o = dynamic_cast<Object *>(component))
+			{
+				o->Name = (typeid(component).name());
+			}
 			components.emplace_back(component);
 			return component;
 		}

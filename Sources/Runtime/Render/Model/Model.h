@@ -16,12 +16,13 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include "Object.h"
 
 using namespace std;
 
 namespace BorderlessEngine
 {
-	class Model
+	class Model : public Object
 	{
 	public:
 		Model(string const &path, bool gamma = false);
