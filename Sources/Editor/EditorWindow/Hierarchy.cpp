@@ -20,6 +20,10 @@ namespace BorderlessEditor
 				{
 					BorderlessEditor::EditorSceneManager::CreateNewGameObject();
 				}
+				if (ImGui::MenuItem("Test GameObject"))
+				{
+					BorderlessEditor::EditorSceneManager::CreateNewCube();
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndPopup();

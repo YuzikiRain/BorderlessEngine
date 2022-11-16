@@ -9,9 +9,6 @@ namespace BorderlessEngine
 	public:
 		MeshRenderer();
 		void Draw();
-
-	// private:
 		Mesh *mesh = 0;
-		// Mesh mesh;
 	};
 }

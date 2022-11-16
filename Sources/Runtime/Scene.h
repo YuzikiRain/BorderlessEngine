@@ -13,6 +13,7 @@ namespace BorderlessEngine
 		Scene(const char *name);
 		Scene(const char *name, vector<GameObject *> gameObjects);
 		void AddEmptyGameObject();
+		void AddCube();
 		vector<GameObject *> GetAllGameObjects();
 		const char *name;
 

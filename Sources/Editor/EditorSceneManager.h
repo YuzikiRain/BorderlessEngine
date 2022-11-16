@@ -23,6 +23,7 @@ namespace BorderlessEditor
         static void CloseScene();
         static Scene *GetCurrentScene();
         static void CreateNewGameObject();
+        static void CreateNewCube();
         static vector<BorderlessEngine::GameObject *> GetAllGameObjects();
 
     private:

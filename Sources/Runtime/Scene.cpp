@@ -1,5 +1,8 @@
 #include "Scene.h"
 #include <vector>
+#include "Render/MeshRenderer.h"
+#include "Render/MeshFilter.h"
+#include "Render/Material.h"
 #include <yaml-cpp/yaml.h>
 
 namespace BorderlessEngine
@@ -22,7 +25,19 @@ namespace BorderlessEngine
 	{
 		this->gameObjects.push_back(new GameObject());
 	}
-	
+
+	void Scene::AddCube()
+	{
+		auto cubeGameObject = new GameObject();
+		auto meshRenderer = cubeGameObject->AddComponent<MeshRenderer>();
+		auto meshFilter = cubeGameObject->AddComponent<MeshFilter>();
+		meshFilter->Model = new Model("Assets/Model/nanosuit/nanosuit.obj");
+		auto materal = cubeGameObject->AddComponent<Material>();
+		materal->shader = new Shader("F:/ForkSource/BorderlessEngine/Shader/unlit.vs", "F:/ForkSource/BorderlessEngine/Shader/unlit.fs");
+		printf(meshFilter->Model->Name.c_str());
+		this->gameObjects.push_back(cubeGameObject);
+	}
+
 	vector<GameObject *> Scene::GetAllGameObjects()
 	{
 		return this->gameObjects;

@@ -89,23 +89,23 @@ namespace BorderlessEditor
         //  线框模式
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        auto scene = EditorSceneManager::GetCurrentScene();
-        if (scene != NULL)
-        {
-            auto gameObjects = scene->GetAllGameObjects();
-            if (!gameObjects.empty() && gameObjects.size() > 0)
-            {
-                for (vector<BorderlessEngine::GameObject *>::iterator it = gameObjects.begin(); it != gameObjects.end(); it++)
-                {
-                    BorderlessEngine::GameObject *obj = (*it);
-                    auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
-                    if (meshFilter != NULL)
-                    {
-                        meshFilter->Model->Draw(defaultShader);
-                    }
-                }
-            }
-        }
+        // auto scene = EditorSceneManager::GetCurrentScene();
+        // if (scene != NULL)
+        // {
+        //     auto gameObjects = scene->GetAllGameObjects();
+        //     if (!gameObjects.empty() && gameObjects.size() > 0)
+        //     {
+        //         for (vector<BorderlessEngine::GameObject *>::iterator it = gameObjects.begin(); it != gameObjects.end(); it++)
+        //         {
+        //             BorderlessEngine::GameObject *obj = (*it);
+        //             auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
+        //             if (meshFilter != NULL)
+        //             {
+        //                 meshFilter->Model->Draw(defaultShader);
+        //             }
+        //         }
+        //     }
+        // }
 
         // 清屏
         glClearColor(0, 0, .7, 0);

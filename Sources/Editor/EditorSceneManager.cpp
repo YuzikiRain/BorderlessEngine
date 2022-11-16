@@ -84,6 +84,11 @@ namespace BorderlessEditor
         currentScene->AddEmptyGameObject();
     }
 
+    void EditorSceneManager::CreateNewCube()
+    {
+        currentScene->AddCube();
+    }
+
     vector<BorderlessEngine::GameObject *> EditorSceneManager::GetAllGameObjects()
     {
         return currentScene->GetAllGameObjects();
