@@ -22,6 +22,7 @@ namespace BorderlessEngine
 	{
 		this->gameObjects.push_back(new GameObject());
 	}
+	
 	vector<GameObject *> Scene::GetAllGameObjects()
 	{
 		return this->gameObjects;

@@ -9,6 +9,7 @@
 #include "Render/Model/Mesh.h"
 #include "Render/Model/Model.h"
 #include <stdio.h>
+#include "Render/Camera.h"
 
 namespace BorderlessEditor
 {
@@ -45,6 +46,10 @@ namespace BorderlessEditor
 				if (ImGui::MenuItem("MeshRenderer"))
 				{
 					obj->AddComponent<BorderlessEngine::MeshRenderer>();
+				}
+				if (ImGui::MenuItem("Camera"))
+				{
+					obj->AddComponent<BorderlessEngine::Camera>();
 				}
 				ImGui::EndMenu();
 			}

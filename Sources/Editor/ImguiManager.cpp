@@ -137,7 +137,7 @@ namespace BorderlessEditor
         //	w.EndDraw();
         // }
 
-        ImGui::ShowDemoWindow();
+        //ImGui::ShowDemoWindow();
 
         // Rendering
         ImGui::Render();
