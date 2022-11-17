@@ -1,13 +1,13 @@
 #pragma once
 #include "Component.h"
-#include "Shader.h"
+#include "Render/Shader.h"
 
 namespace BorderlessEngine
 {
 	class Material : public Component
 	{
 	public:
-		Material();
+		Material() {}
 		Shader *shader;
 	};
 }

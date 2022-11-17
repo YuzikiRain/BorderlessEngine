@@ -8,7 +8,7 @@ namespace BorderlessEngine
 	class MeshFilter : public Component
 	{
 	public:
-		MeshFilter();
+		MeshFilter() {}
 		Mesh *Mesh;
 		Model *Model;
 	};
