@@ -28,7 +28,7 @@ namespace BorderlessEditor
     void GameEditorWindow::Draw()
     {
         // 渲染到帧缓冲（附件为纹理）
-        // glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ImVec2 wsize = ImGui::GetWindowSize();
@@ -48,6 +48,8 @@ namespace BorderlessEditor
             glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
             // glm::mat4 view = glm::lookAt(transform->position, transform->position + transform->Front, transform->Up);
             material.shader->setMatrix4("view", view);
+
+            shader->use();
             meshFilter->Model->Draw(*shader);
 
             // obj.GetComponent<MeshRenderer>();
@@ -57,8 +59,8 @@ namespace BorderlessEditor
             // w.EndDraw();
         }
 
-        // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-        // glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // Using a Child allow to fill all the space of the window.
         // It also alows customization
@@ -66,7 +68,7 @@ namespace BorderlessEditor
         // Get the size of the child (i.e. the whole draw size of the windows).
 
         // Because I use the texture from OpenGL, I need to invert the V from the UV.
-        // ImGui::Image((ImTextureID)texture, wsize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((ImTextureID)texture, wsize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::EndChild();
     }
 
