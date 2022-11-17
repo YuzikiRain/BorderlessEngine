@@ -10,6 +10,7 @@
 #include "Render/Model/Model.h"
 #include <stdio.h>
 #include "Render/Camera.h"
+#include "Transform.h"
 
 namespace BorderlessEditor
 {
@@ -66,6 +67,17 @@ namespace BorderlessEditor
 		ImGui::Spacing();
 
 		// 绘制物体的组件，TODO:实现反射，根据类型的字段类型自动绘制UI
+		auto transform = obj->GetComponent<BorderlessEngine::Transform>();
+		if (transform != NULL)
+		{
+			ImGui::Text("Transform");
+			static float f3[3] = {transform->position.x, transform->position.y, transform->position.z};
+			ImGui::InputFloat3("position", f3);
+			transform->position.x = f3[0];
+			transform->position.y = f3[1];
+			transform->position.z = f3[2];
+		}
+
 		auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
 		if (meshFilter != NULL)
 		{

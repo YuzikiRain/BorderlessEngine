@@ -3,6 +3,7 @@
 #include "Render/MeshRenderer.h"
 #include "Render/MeshFilter.h"
 #include "Render/Material.h"
+#include "Transform.h"
 #include <yaml-cpp/yaml.h>
 
 namespace BorderlessEngine
@@ -29,6 +30,7 @@ namespace BorderlessEngine
 	void Scene::AddCube()
 	{
 		auto cubeGameObject = new GameObject();
+		auto transform = cubeGameObject->AddComponent<Transform>();
 		auto meshRenderer = cubeGameObject->AddComponent<MeshRenderer>();
 		auto meshFilter = cubeGameObject->AddComponent<MeshFilter>();
 		meshFilter->Model = new Model("Assets/Model/nanosuit/nanosuit.obj");

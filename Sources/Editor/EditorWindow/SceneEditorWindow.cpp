@@ -50,8 +50,10 @@ namespace BorderlessEditor
 		{
 			// 迭代器it是指向BorderlessEngine::GameObject *的指针
 			BorderlessEngine::GameObject *obj = *(it);
-			// auto meshRenderer = obj->GetComponent<BorderlessEngine::MeshRenderer>();
-			auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
+            auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
+            auto shader = *obj->GetComponent<BorderlessEngine::Material>()->shader;
+            // shader.setMatrix4("", );
+            meshFilter->Model->Draw(shader);
 			// auto material = obj->GetComponent<BorderlessEngine::Material>();
 			// glm::mat4 projection = glm::perspective(glm::radians(60.0f), wsize.x / wsize.y, 0.1f, 100.0f);
 			// material->shader->setMatrix4("projection", projection);
