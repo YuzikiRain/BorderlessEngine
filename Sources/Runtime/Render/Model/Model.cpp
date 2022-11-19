@@ -109,9 +109,13 @@ namespace BorderlessEngine
 			// material存储的texture路径
 			material->GetTexture(type, i, &str);
 			Texture texture;
-			texture.id = TextureFromFile(str.C_Str(), directoryPath);
+			// 不知道为什么，这里的str.data字符数组的前4个字符都是0，所以只能从4开始读取
+			char *realPath = &str.data[4];
+			texture.id = TextureFromFile(realPath, directoryPath);
+			// texture.id = TextureFromFile(str.C_Str(), directoryPath);
 			texture.type = typeName;
-			texture.path = str.C_Str();
+			// texture.path = str.C_Str();
+			 texture.path = realPath;
 			textures.push_back(texture);
 		}
 		return textures;

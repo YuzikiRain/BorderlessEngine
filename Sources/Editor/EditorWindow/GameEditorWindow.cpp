@@ -30,6 +30,9 @@ namespace BorderlessEditor
     {
         // 渲染到帧缓冲（附件为纹理）
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        // 开启深度测试
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(1.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ImVec2 wsize = ImGui::GetWindowSize();
