@@ -33,9 +33,9 @@ namespace BorderlessEngine
 		auto transform = cubeGameObject->AddComponent<Transform>();
 		auto meshRenderer = cubeGameObject->AddComponent<MeshRenderer>();
 		auto meshFilter = cubeGameObject->AddComponent<MeshFilter>();
-		meshFilter->Model = new Model("D:/GitReposity/BorderlessEngine/Assets/Model/nanosuit/nanosuit.obj");
+		meshFilter->Model = new Model("F:/ForkSource/BorderlessEngine/Assets/Model/nanosuit/nanosuit.obj");
 		auto material = cubeGameObject->AddComponent<Material>();
-		material->shader = new Shader("D:/GitReposity/BorderlessEngine/Shader/unlit.vs", "D:/GitReposity/BorderlessEngine/Shader/unlit.fs");
+		material->shader = new Shader("F:/ForkSource/BorderlessEngine/Shader/unlit.vs", "F:/ForkSource/BorderlessEngine/Shader/unlit.fs");
 		printf(meshFilter->Model->Name.c_str());
 		this->gameObjects.push_back(cubeGameObject);
 	}

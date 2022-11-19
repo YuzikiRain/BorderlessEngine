@@ -10,6 +10,8 @@ namespace BorderlessEngine
 	public:
 		Transform()
 		{
+			position = glm::vec3(0.0f, 0.0f, 0.0f);
+
 			// calculate the new Front vector
 			glm::vec3 front;
 			front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));

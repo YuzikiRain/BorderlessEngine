@@ -4,6 +4,7 @@
 #include "imgui/imgui.h"
 #include "Scene.h"
 #include "EditorSceneManager.h"
+#include "Transform.h"
 #include "Render/MeshRenderer.h"
 #include "Render/MeshFilter.h"
 #include "Render/Material.h"
@@ -38,19 +39,20 @@ namespace BorderlessEditor
         for (vector<BorderlessEngine::GameObject *>::iterator it = objs.begin(); it != objs.end(); it++)
         {
             auto obj = *it;
+            auto transform = obj->GetComponent<BorderlessEngine::Transform>();
             auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
             auto material = *obj->GetComponent<BorderlessEngine::Material>();
-            auto shader = material.shader;
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f));
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, transform->position);
             material.shader->setMatrix4("model", model);
-            glm::mat4 projection = glm::perspective(glm::radians(60.0f), wsize.x / wsize.y, 0.1f, 100.0f);
-            material.shader->setMatrix4("projection", projection);
             glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
             // glm::mat4 view = glm::lookAt(transform->position, transform->position + transform->Front, transform->Up);
             material.shader->setMatrix4("view", view);
+            glm::mat4 projection = glm::perspective(glm::radians(60.0f), wsize.x / wsize.y, 0.1f, 100.0f);
+            material.shader->setMatrix4("projection", projection);
 
-            shader->use();
-            meshFilter->Model->Draw(*shader);
+            material.shader->use();
+            meshFilter->Model->Draw(*material.shader);
 
             // obj.GetComponent<MeshRenderer>();
             // w.BeginDraw();

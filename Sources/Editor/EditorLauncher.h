@@ -10,7 +10,7 @@ namespace BorderlessEditor
 
     private:
         static void Loop();
-        static void Input();
+        static void Input(GLFWwindow* window);
         static void Render();
         static void WaitForNextFrame();
     };

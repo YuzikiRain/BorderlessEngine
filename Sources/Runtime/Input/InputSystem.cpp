@@ -3,17 +3,17 @@
 #include "Input/InputSystem.h"
 
 namespace BorderlessEngine {
-	extern GLFWwindow* window;
-	bool InputSystem::Initialize()
+	// extern GLFWwindow* window;
+	bool InputSystem::Initialize(GLFWwindow* window)
 	{
 		glfwSetCursorPosCallback(window, mouse_callback);
 		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		return 1;
 	}
-	void InputSystem::Update()
+	void InputSystem::Update(GLFWwindow* window)
 	{
 		glfwPollEvents();
-		processInput(window);
+		// processInput(window);
 	}
 	void InputSystem::FixedUpdate()
 	{

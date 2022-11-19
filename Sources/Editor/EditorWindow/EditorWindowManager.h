@@ -3,6 +3,7 @@
 #include "EditorWindow/EditorWindow.h"
 #include "EditorWindow/Inspector.h"
 #include "EditorWindow/Hierarchy.h"
+#include "EditorWindow/SceneEditorWindow.h"
 #include "EditorWindow/GameEditorWindow.h"
 #include <vector>
 
@@ -17,6 +18,7 @@ namespace BorderlessEditor
     private:
         static Inspector *inspector;
         static Hierarchy *hierarchy;
+        static SceneEditorWindow *scene;
         static GameEditorWindow *game;
         static std::vector<EditorWindow *> *editorWindows;
     };

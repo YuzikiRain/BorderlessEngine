@@ -7,6 +7,7 @@
 #include "EditorWindow/EditorWindowManager.h"
 #include "EditorSceneManager.h"
 #include "ImguiManager.h"
+#include "Input/InputSystem.h"
 
 #include <iostream>
 #include <cmath>
@@ -42,12 +43,17 @@ namespace BorderlessEditor
 
         BorderlessEngine::GLFWManager::Initialize(SCR_WIDTH, SCR_HEIGHT);
         auto glfwWindow = BorderlessEngine::GLFWManager::GetGLFWWindow();
+
+        // 初始化
         EditorWindowManager::Init();
         ImguiManager::InitImgui(glfwWindow);
-
+        // BorderlessEngine::InputSystem::Initialize(glfwWindow);
         defaultShader = Shader("F:/ForkSource/BorderlessEngine/Shader/unlit.vs", "F:/ForkSource/BorderlessEngine/Shader/unlit.fs");
+
+        // 循环
         Loop();
 
+        // 退出
         ImguiManager::DestroyImgui();
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();
@@ -59,7 +65,7 @@ namespace BorderlessEditor
         while (!glfwWindowShouldClose(glfwWindow))
         {
             // 输入
-            Input();
+            BorderlessEngine::InputSystem::Update(glfwWindow);
             // 渲染
             Render();
             // 绘制编辑器UI
@@ -71,17 +77,15 @@ namespace BorderlessEditor
         }
     }
 
-    void EditorLauncher::Input()
+    void EditorLauncher::Input(GLFWwindow *window)
     {
-        // glfw提供的输入
-        glfwPollEvents();
-        // processInput(window);
+
     }
 
     void EditorLauncher::Render()
     {
-        // 开启深度测试
-        glEnable(GL_DEPTH_TEST);
+        // // 开启深度测试
+        // glEnable(GL_DEPTH_TEST);
         //// 开启剔除
         // glEnable(GL_CULL_FACE);
         //// 开启背面剔除

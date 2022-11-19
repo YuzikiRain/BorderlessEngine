@@ -62,7 +62,7 @@ namespace BorderlessEngine
 
 	void InitSystems()
 	{
-		InputSystem::Initialize();
+		InputSystem::Initialize(window);
 		RenderSystem::Initialize();
 	}
 
@@ -70,7 +70,7 @@ namespace BorderlessEngine
 	{
 		while (!BorderlessEngine::ShouldQuit())
 		{
-			InputSystem::Update();
+			InputSystem::Update(window);
 			// // 渲染可能会消耗大量时间，放在模拟时间间隔之外以避免死亡螺旋
 			RenderSystem::Update();
 
