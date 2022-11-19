@@ -52,8 +52,14 @@ namespace BorderlessEditor
 		auto cameraTransform = cameraGameObject->GetComponent<BorderlessEngine::Transform>();
 		auto camera = cameraGameObject->GetComponent<BorderlessEngine::Camera>();
 
-		// if (ImGui::IsKeyPressed(ImGuiKey_Space))
-  		// 	cameraTransform->position += cameraTransform->Front * 0.1f;
+		if (ImGui::IsKeyPressed(ImGuiKey_UpArrow))
+			cameraTransform->position += cameraTransform->Front;
+		if (ImGui::IsKeyPressed(ImGuiKey_DownArrow))
+			cameraTransform->position -= cameraTransform->Front;
+		if (ImGui::IsKeyPressed(ImGuiKey_LeftArrow))
+			cameraTransform->position -= cameraTransform->Right;
+		if (ImGui::IsKeyPressed(ImGuiKey_RightArrow))
+			cameraTransform->position += cameraTransform->Right;
 
 		// 绘制一些东西
 		auto objs = EditorSceneManager::GetAllGameObjects();

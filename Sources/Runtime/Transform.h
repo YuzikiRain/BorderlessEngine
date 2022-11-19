@@ -11,6 +11,7 @@ namespace BorderlessEngine
 		Transform()
 		{
 			position = glm::vec3(0.0f, 0.0f, 0.0f);
+			WorldUp =  glm::vec3(0.0f, 1.0f, 0.0f);
 
 			// calculate the new Front vector
 			glm::vec3 front;
