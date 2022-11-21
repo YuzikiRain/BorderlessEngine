@@ -52,14 +52,45 @@ namespace BorderlessEditor
 		auto cameraTransform = cameraGameObject->GetComponent<BorderlessEngine::Transform>();
 		auto camera = cameraGameObject->GetComponent<BorderlessEngine::Camera>();
 
-		if (ImGui::IsKeyPressed(ImGuiKey_UpArrow))
-			cameraTransform->position += cameraTransform->Front;
-		if (ImGui::IsKeyPressed(ImGuiKey_DownArrow))
-			cameraTransform->position -= cameraTransform->Front;
-		if (ImGui::IsKeyPressed(ImGuiKey_LeftArrow))
-			cameraTransform->position -= cameraTransform->Right;
-		if (ImGui::IsKeyPressed(ImGuiKey_RightArrow))
-			cameraTransform->position += cameraTransform->Right;
+		if (ImGui::IsWindowFocused())
+		{
+			if (ImGui::IsKeyPressed(ImGuiKey_UpArrow))
+				cameraTransform->position += cameraTransform->Front;
+			if (ImGui::IsKeyPressed(ImGuiKey_DownArrow))
+				cameraTransform->position -= cameraTransform->Front;
+			if (ImGui::IsKeyPressed(ImGuiKey_LeftArrow))
+				cameraTransform->position -= cameraTransform->Right;
+			if (ImGui::IsKeyPressed(ImGuiKey_RightArrow))
+				cameraTransform->position += cameraTransform->Right;
+
+			/// @brief  按住鼠标右键拖拽Scene视角
+			static float previousPitch = 0.0f;
+			static float previousYaw = 0.0f;
+			if (ImGui::IsMouseDragging(ImGuiMouseButton_Right))
+			{
+				auto delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
+				cameraTransform->Yaw = previousYaw + delta.x;
+				cameraTransform->Pitch = previousPitch - delta.y;
+
+				glm::vec3 WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+				// calculate the new Front vector
+				glm::vec3 front;
+				front.x = cos(glm::radians(cameraTransform->Yaw)) * cos(glm::radians(cameraTransform->Pitch));
+				front.y = sin(glm::radians(cameraTransform->Pitch));
+				front.z = sin(glm::radians(cameraTransform->Yaw)) * cos(glm::radians(cameraTransform->Pitch));
+				cameraTransform->Front = glm::normalize(front);
+				// also re-calculate the Right and Up vector
+				cameraTransform->Right = glm::normalize(glm::cross(cameraTransform->Front, WorldUp)); // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+				cameraTransform->Up = glm::normalize(glm::cross(cameraTransform->Right, cameraTransform->Front));
+			}
+			else
+			{
+				previousYaw = cameraTransform->Yaw;
+				previousPitch = cameraTransform->Pitch;
+			}
+			// ImGui::GetIO().WantCaptureMouse();
+		}
 
 		// 绘制一些东西
 		auto objs = EditorSceneManager::GetAllGameObjects();
@@ -93,5 +124,4 @@ namespace BorderlessEditor
 		ImGui::Image((ImTextureID)texture, wsize, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::EndChild();
 	}
-
 }

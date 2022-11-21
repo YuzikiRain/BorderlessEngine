@@ -71,7 +71,7 @@ namespace BorderlessEditor
 		if (transform != NULL)
 		{
 			ImGui::Text("Transform");
-			static float f3[3] = {transform->position.x, transform->position.y, transform->position.z};
+			float f3[3] = {transform->position.x, transform->position.y, transform->position.z};
 			ImGui::InputFloat3("position", f3);
 			transform->position.x = f3[0];
 			transform->position.y = f3[1];
