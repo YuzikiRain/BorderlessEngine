@@ -71,11 +71,11 @@ namespace BorderlessEditor
 		if (transform != NULL)
 		{
 			ImGui::Text("Transform");
-			float f3[3] = {transform->position.x, transform->position.y, transform->position.z};
-			ImGui::InputFloat3("position", f3);
-			transform->position.x = f3[0];
-			transform->position.y = f3[1];
-			transform->position.z = f3[2];
+			float f3[3] = {transform->Position.x, transform->Position.y, transform->Position.z};
+			ImGui::InputFloat3("Position", f3);
+			transform->Position.x = f3[0];
+			transform->Position.y = f3[1];
+			transform->Position.z = f3[2];
 		}
 
 		auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
