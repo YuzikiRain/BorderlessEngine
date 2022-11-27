@@ -52,7 +52,7 @@ namespace BorderlessEditor
 		auto cameraTransform = cameraGameObject->GetComponent<BorderlessEngine::Transform>();
 		auto camera = cameraGameObject->GetComponent<BorderlessEngine::Camera>();
 
-		if (ImGui::IsWindowFocused())
+		if (ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows))
 		{
 			if (ImGui::IsKeyPressed(ImGuiKey_UpArrow))
 				cameraTransform->position += cameraTransform->Front;
