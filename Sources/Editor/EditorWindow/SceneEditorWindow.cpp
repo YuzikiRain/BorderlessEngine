@@ -54,6 +54,9 @@ namespace BorderlessEditor
 
 		// 开启深度测试
 		glEnable(GL_DEPTH_TEST);
+		// 开启背面剔除（如果不开启则nanosuit模型默认是正面剔除的）
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 		glClearColor(1.0, 1.0, 1.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
