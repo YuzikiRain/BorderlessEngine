@@ -8,6 +8,7 @@
 #include "yaml-cpp/yaml.h"
 #include "Render/Model/Mesh.h"
 #include "Render/Model/Model.h"
+#include "Render/Material.h"
 #include <stdio.h>
 #include "Render/Camera.h"
 #include "Transform.h"
@@ -106,6 +107,32 @@ namespace BorderlessEditor
 					// currentScene = new BorderlessEngine::Scene("scene", objs);
 				}
 			}
+		}
+		auto material = obj->GetComponent<BorderlessEngine::Material>();
+		if (ImGui::Button("Set Vertex Shader"))
+		{
+			const char *shaderFilter = "Shader (*.mesh)\0*.mesh\0";
+			const char *shaderFileExtension = "vs";
+			string path = FileUtility::OpenFileDialogue(shaderFilter, shaderFileExtension);
+			if (!path.empty())
+			{
+				YAML::Node data = YAML::LoadFile(path);
+				material->shader->ChangeVertex(path.c_str());
+			}
+		}
+		if (ImGui::Button("Set Fragment Shader"))
+		{
+			const char *shaderFilter = "Shader (*.fs)\0*.fs\0";
+			const char *shaderFileExtension = "fs";
+			string path = FileUtility::OpenFileDialogue(shaderFilter, shaderFileExtension);
+			if (!path.empty())
+			{
+				YAML::Node data = YAML::LoadFile(path);
+				material->shader->ChangeFragment(path.c_str());
+			}
+		}
+		if (ImGui::Button("Edit"))
+		{
 		}
 	}
 }

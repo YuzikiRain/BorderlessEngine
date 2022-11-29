@@ -34,32 +34,112 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 	const char *vShaderCode = vertexCode.c_str();
 	const char *fShaderCode = fragmentCode.c_str();
 	// 2. compile shaders
-	unsigned int vertex, fragment;
 	// vertex shader
-	vertex = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex, 1, &vShaderCode, NULL);
-	glCompileShader(vertex);
-	checkCompileErrors(vertex, "VERTEX");
+	vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShaderID, 1, &vShaderCode, NULL);
+	glCompileShader(vertexShaderID);
+	checkCompileErrors(vertexShaderID, "VERTEX");
 	// fragment Shader
-	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment, 1, &fShaderCode, NULL);
-	glCompileShader(fragment);
-	checkCompileErrors(fragment, "FRAGMENT");
+	fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShaderID, 1, &fShaderCode, NULL);
+	glCompileShader(fragmentShaderID);
+	checkCompileErrors(fragmentShaderID, "FRAGMENT");
 	// shader Program
 	ID = glCreateProgram();
-	glAttachShader(ID, vertex);
-	glAttachShader(ID, fragment);
+	glAttachShader(ID, vertexShaderID);
+	glAttachShader(ID, fragmentShaderID);
 	glLinkProgram(ID);
 	checkCompileErrors(ID, "PROGRAM");
 	// delete the shaders as they're linked into our program now and no longer necessary
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
+	glDeleteShader(vertexShaderID);
+	glDeleteShader(fragmentShaderID);
 }
 
 void Shader::use()
 {
 	glUseProgram(ID);
 }
+
+void Shader::ChangeVertex(const char *vertexPath)
+{
+	// 1. retrieve the vertex/fragment source code from filePath
+	std::string vertexCode;
+	std::ifstream vShaderFile;
+	// ensure ifstream objects can throw exceptions:
+	vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try
+	{
+		// open files
+		vShaderFile.open(vertexPath);
+		std::stringstream vShaderStream;
+		// read file's buffer contents into streams
+		vShaderStream << vShaderFile.rdbuf();
+		// close file handlers
+		vShaderFile.close();
+		// convert stream into string
+		vertexCode = vShaderStream.str();
+	}
+	catch (std::ifstream::failure &e)
+	{
+		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << e.what() << std::endl;
+	}
+	const char *vShaderCode = vertexCode.c_str();
+	// 2. compile shaders
+	// vertex shader
+	vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShaderID, 1, &vShaderCode, NULL);
+	glCompileShader(vertexShaderID);
+	checkCompileErrors(vertexShaderID, "VERTEX");
+	// shader Program
+	ID = glCreateProgram();
+	glAttachShader(ID, vertexShaderID);
+	glAttachShader(ID, fragmentShaderID);
+	glLinkProgram(ID);
+	checkCompileErrors(ID, "PROGRAM");
+	// delete the shaders as they're linked into our program now and no longer necessary
+	glDeleteShader(vertexShaderID);
+}
+
+void Shader::ChangeFragment(const char *fragmentPath)
+{
+	// 1. retrieve the vertex/fragment source code from filePath
+	std::string fragmentCode;
+	std::ifstream fShaderFile;
+	// ensure ifstream objects can throw exceptions:
+	fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try
+	{
+		// open files
+		fShaderFile.open(fragmentPath);
+		std::stringstream fShaderStream;
+		// read file's buffer contents into streams
+		fShaderStream << fShaderFile.rdbuf();
+		// close file handlers
+		fShaderFile.close();
+		// convert stream into string
+		fragmentCode = fShaderStream.str();
+	}
+	catch (std::ifstream::failure &e)
+	{
+		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << e.what() << std::endl;
+	}
+	const char *fShaderCode = fragmentCode.c_str();
+	// 2. compile shaders
+	// vertex shader
+	fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShaderID, 1, &fShaderCode, NULL);
+	glCompileShader(fragmentShaderID);
+	checkCompileErrors(fragmentShaderID, "FRAGMENT");
+	// shader Program
+	ID = glCreateProgram();
+	glAttachShader(ID, vertexShaderID);
+	glAttachShader(ID, fragmentShaderID);
+	glLinkProgram(ID);
+	checkCompileErrors(ID, "PROGRAM");
+	// delete the shaders as they're linked into our program now and no longer necessary
+	glDeleteShader(fragmentShaderID);
+}
+
 
 #pragma region 设置uniform变量
 

@@ -17,6 +17,8 @@ public:
 	Shader();
 	Shader(const char *vertexPath, const char *fragmentPath);
 	void use();
+	void ChangeVertex(const char *vertexPath);
+	void ChangeFragment(const char *fragmentPath);
 #pragma region 设置uniform变量
 
 	void setBool(const std::string &name, bool value) const;
@@ -28,6 +30,8 @@ public:
 #pragma endregion
 
 private:
+	unsigned int vertexShaderID;
+	unsigned int fragmentShaderID;
 	// utility function for checking shader compilation/linking errors.
 	// ------------------------------------------------------------------------
 	void checkCompileErrors(unsigned int shader, std::string type);
