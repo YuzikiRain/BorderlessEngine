@@ -46,10 +46,10 @@ namespace BorderlessEditor
             auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
             auto material = *obj->GetComponent<BorderlessEngine::Material>();
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, transform->position);
+            model = glm::translate(model, transform->Position);
             material.shader->setMatrix4("model", model);
             glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-            // glm::mat4 view = glm::lookAt(transform->position, transform->position + transform->Front, transform->Up);
+            // glm::mat4 view = glm::lookAt(transform->Position, transform->Position + transform->Front, transform->Up);
             material.shader->setMatrix4("view", view);
             glm::mat4 projection = glm::perspective(glm::radians(60.0f), wsize.x / wsize.y, 0.1f, 100.0f);
             material.shader->setMatrix4("projection", projection);

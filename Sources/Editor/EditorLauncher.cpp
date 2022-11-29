@@ -29,9 +29,6 @@ namespace BorderlessEditor
     double timeScale = 1.0;
     double targetTime = 0.0;
 
-    // static Shader defaultShader = Shader("F:/ForkSource/BorderlessEngine/Shader/unlit.vs", "F:/ForkSource/BorderlessEngine/Shader/unlit.fs");
-    Shader defaultShader;
-
     double GetFrameInterval()
     {
         return 1.0 / targetFrameRate;
@@ -47,8 +44,6 @@ namespace BorderlessEditor
         // 初始化
         EditorWindowManager::Init();
         ImguiManager::InitImgui(glfwWindow);
-        // BorderlessEngine::InputSystem::Initialize(glfwWindow);
-        defaultShader = Shader("F:/ForkSource/BorderlessEngine/Shader/unlit.vs", "F:/ForkSource/BorderlessEngine/Shader/unlit.fs");
 
         // 循环
         Loop();
@@ -84,33 +79,6 @@ namespace BorderlessEditor
 
     void EditorLauncher::Render()
     {
-        // // 开启深度测试
-        // glEnable(GL_DEPTH_TEST);
-        //// 开启剔除
-        // glEnable(GL_CULL_FACE);
-        //// 开启背面剔除
-        // glCullFace(GL_BACK);
-        //  线框模式
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-        // auto scene = EditorSceneManager::GetCurrentScene();
-        // if (scene != NULL)
-        // {
-        //     auto gameObjects = scene->GetAllGameObjects();
-        //     if (!gameObjects.empty() && gameObjects.size() > 0)
-        //     {
-        //         for (vector<BorderlessEngine::GameObject *>::iterator it = gameObjects.begin(); it != gameObjects.end(); it++)
-        //         {
-        //             BorderlessEngine::GameObject *obj = (*it);
-        //             auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
-        //             if (meshFilter != NULL)
-        //             {
-        //                 meshFilter->Model->Draw(defaultShader);
-        //             }
-        //         }
-        //     }
-        // }
-
         // 清屏
         glClearColor(0, 0, .7, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
