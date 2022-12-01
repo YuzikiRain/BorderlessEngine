@@ -29,10 +29,7 @@ namespace BorderlessEditor
 		cameraGameObject = new BorderlessEngine::GameObject("SceneCamera");
 		auto cameraTransform = cameraGameObject->AddComponent<BorderlessEngine::Transform>();
 		cameraTransform->Position = glm::vec3(0.0f, 0.0f, 10.0f);
-		// cameraTransform->Yaw = 180.0f;
-		// cameraTransform->Front = glm::vec3(0.0f, 0.0f, -1.0f);
-		// cameraTransform->Up = glm::vec3(0.0f, 1.0f, 0.0f);
-		// cameraTransform->UpdateImmediately();
+
 		auto camera = cameraGameObject->AddComponent<BorderlessEngine::Camera>();
 		camera->fov = 60.0f;
 		camera->nearPlane = 0.01f;
@@ -103,18 +100,18 @@ namespace BorderlessEditor
 			auto obj = *it;
 			auto transform = obj->GetComponent<BorderlessEngine::Transform>();
 			auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
-			auto material = *obj->GetComponent<BorderlessEngine::Material>();
+			auto material = obj->GetComponent<BorderlessEngine::Material>();
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, transform->Position);
-			material.shader->setMatrix4("model", model);
+			material->shader->setMatrix4("model", model);
 			glm::mat4 view = glm::lookAt(cameraTransform->Position, cameraTransform->Position + cameraTransform->Front * 10.0f, cameraTransform->Up);
 			// glm::mat4 view = cameraTransform->GetMatrix();
-			material.shader->setMatrix4("view", view);
+			material->shader->setMatrix4("view", view);
 			glm::mat4 projection = glm::perspective(glm::radians(camera->fov), wsize.x / wsize.y, camera->nearPlane, camera->farPlane);
-			material.shader->setMatrix4("projection", projection);
+			material->shader->setMatrix4("projection", projection);
 
-			material.shader->use();
-			meshFilter->Model->Draw(*material.shader);
+			material->shader->use();
+			meshFilter->Model->Draw(*(material->shader));
 		}
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);

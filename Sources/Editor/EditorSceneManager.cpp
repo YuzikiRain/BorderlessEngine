@@ -11,6 +11,7 @@
 
 #include "EditorLauncher.h"
 #include "FileUtility.h"
+#include "Transform.h"
 
 using Scene = BorderlessEngine::Scene;
 
@@ -40,10 +41,9 @@ namespace BorderlessEditor
         for (size_t i = 0; i < sceneData["gameObjects"].size(); i++)
         {
             auto name = sceneData["gameObjects"][i]["name"].as<string>();
-            objs.push_back(
-                new BorderlessEngine::GameObject(
-                    name.c_str(),
-                    sceneData["gameObjects"][i]["isActive"].as<bool>()));
+            auto obj = new BorderlessEngine::GameObject(name.c_str(), sceneData["gameObjects"][i]["isActive"].as<bool>());
+            auto transform = obj->AddComponent<BorderlessEngine::Transform>();
+            objs.push_back(obj);
         }
         currentScene = new BorderlessEngine::Scene("scene", objs);
     }
