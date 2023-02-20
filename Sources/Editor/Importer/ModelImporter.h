@@ -6,7 +6,7 @@
 #include "Render/Model/Vertex.h"
 #include "Render/Model/Mesh.h"
 #include "Render/Model/MeshFileHead.h"
-#define STB_IMAGE_IMPLEMENTATION
+// #define STB_IMAGE_IMPLEMENTATION
 #include "stb-image/stb_image.h"
 
 using namespace std;
@@ -23,9 +23,7 @@ namespace BorderlessEditor
         // ModelImporter(std::string path) : ScriptedImporter(path) {}
         void OnImportAsset(AssetImportContext context)
         {
-            std::fstream modelFileStream;
             auto path = context.path;
-            modelFileStream.open(path, std::ios::in);
             // YAML::Node meshNode;
             auto model = new BorderlessEngine::Model(path);
             auto meshes = model->ExportMesh();
@@ -48,21 +46,27 @@ namespace BorderlessEditor
             mesh_file_head.type_[2] = 's';
             mesh_file_head.type_[3] = 'h';
 
-            std::fstream output_file_stream;
-            // 原地生成对应的专用mesh资产
-            auto newPath = path.substr(0, path.find(string(".") + modelFileExtension));
-            newPath = newPath + string(".") + meshFileExtension;
-            output_file_stream.open(newPath, ios::out | ios::trunc);
-            // output_file_stream << meshNode;
-            // 写入文件头
-            output_file_stream.write((char *)&mesh_file_head, sizeof(mesh_file_head));
-            // 写入顶点数据
-            output_file_stream.write((char *)&kVertexRemoveDumplicateVector[0], kVertexRemoveDumplicateVector.size() * sizeof(Vertex));
-            // 写入索引数据
-            output_file_stream.write((char *)&kVertexIndexVector[0], kVertexIndexVector.size() * sizeof(unsigned short));
-            output_file_stream.close();
+            int i = 0;
+            for (auto mesh : meshes)
+            {
+                mesh_file_head.vertex_num_ = mesh.vertices.size();
+                mesh_file_head.vertex_index_num_ = mesh.indices.size();
 
-            modelFileStream.close();
+                std::fstream output_file_stream;
+                // 原地生成对应的专用mesh资产
+                auto newPath = path.substr(0, path.find(string(".") + modelFileExtension));
+                newPath = newPath + to_string(i) + string(".") + meshFileExtension;
+                output_file_stream.open(newPath, ios::out | ios::binary);
+
+                // 写入文件头
+                output_file_stream.write((char *)&mesh_file_head, sizeof(mesh_file_head));
+                // 写入顶点数据
+                output_file_stream.write((char *)&mesh.vertices[0], mesh_file_head.vertex_num_ * sizeof(Vertex));
+                // 写入索引数据
+                output_file_stream.write((char *)&mesh.indices[0], mesh_file_head.vertex_index_num_ * sizeof(unsigned int));
+
+                output_file_stream.close();
+            }
         }
 
     private:

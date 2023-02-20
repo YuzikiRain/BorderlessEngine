@@ -65,7 +65,7 @@ namespace BorderlessEngine
 
 RTTR_REGISTRATION
 {
-	registration::class_<Component>("Component")
+	registration::class_<BorderlessEngine::Component>("Component")
 		.constructor<>();
 		
 	registration::class_<BorderlessEngine::Transform>("Transform")
