@@ -59,15 +59,15 @@ namespace BorderlessEngine
 	private:
 		;
 
-		RTTR_ENABLE()
+		RTTR_ENABLE(Component)
 	};
 }
 
 RTTR_REGISTRATION
 {
-		registration::class_<Component>("Component")
+	registration::class_<Component>("Component")
 		.constructor<>();
-
+		
 	registration::class_<BorderlessEngine::Transform>("Transform")
 		.constructor<>()
 		// .property("Yaw", &BorderlessEngine::Transform::Yaw)

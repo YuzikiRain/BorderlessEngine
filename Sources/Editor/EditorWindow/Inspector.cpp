@@ -71,39 +71,56 @@ namespace BorderlessEditor
 		ImGui::NewLine();
 		ImGui::Spacing();
 
+		auto tt = obj->GetComponent<BorderlessEngine::Transform>();
+		if (tt)
+		{
+			auto x = tt->Position.x;
+		}
+
 		for (auto &kv : obj->components)
 		{
 			auto name = kv.first;
 			ImGui::Text(name.c_str());
-			auto component = kv.second;
-			auto type = type::get_by_name(name);
+			auto componentPointer = kv.second;
+			auto component = *(kv.second);
+			BorderlessEngine::Transform *target = dynamic_cast<BorderlessEngine::Transform *>(kv.second);
+			if (target != NULL)
+			{
+				// BorderlessEngine::Transform *target = static_cast<BorderlessEngine::Transform *>(kv.second);
+				auto x = target->Position.x;
+			}
+			// auto type = type::get_by_name(name);
+			auto type = type::get(*componentPointer);
+			// auto type = type::get(*target);
 			for (auto &prop : type.get_properties())
 			{
 				auto temp = prop.get_type().get_name().to_string().c_str();
-				auto v1 = prop.get_value(component);
-				if (v1.is_type<glm::vec3>())
+				// auto v1 = prop.get_value(target);
+				auto propertyValue = prop.get_value(componentPointer);
+				if (propertyValue.is_type<glm::vec3>())
 				{
-					auto &position = v1.get_value<glm::vec3>();
+					auto &position = propertyValue.get_value<glm::vec3>();
 					float f3[3] = {position.x, position.y, position.z};
 				}
 				if (prop.get_type() == type::get<glm::vec3>())
 				{
-					auto &position = v1.get_value<glm::vec3>();
+					auto &position = propertyValue.get_value<glm::vec3>();
 					float f3[3] = {position.x, position.y, position.z};
 					ImGui::InputFloat3(prop.get_name().to_string().c_str(), f3);
 					position.x = f3[0];
 					position.y = f3[1];
 					position.z = f3[2];
-					prop.set_value(component, position);
+					prop.set_value(componentPointer, position);
+					// prop.set_value(target, position);
 
-					for (auto &prop2 : prop.get_type().get_properties())
-					{
-						ImGui::InputFloat3("Position", f3);
-						if (prop.get_type() == type::get<float>())
-						{
-							prop2.get_value(component);
-						}
-					}
+					// ImGui::InputFloat3("Position", f3);
+					// for (auto &prop2 : prop.get_type().get_properties())
+					// {
+					// 	if (prop2.get_type() == type::get<float>())
+					// 	{
+					// 		prop2.get_value(component);
+					// 	}
+					// }
 
 					// variant var_prop = prop.get_value(component);
 
