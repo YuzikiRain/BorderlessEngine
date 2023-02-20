@@ -15,6 +15,7 @@
 #include "yaml-cpp/yaml.h"
 
 #include "Render/Model/Model.h"
+#include "Importer/ModelImporter.h"
 
 namespace BorderlessEditor
 {
@@ -86,42 +87,50 @@ namespace BorderlessEditor
 
                 ImGui::EndMenu();
             }
-            if (ImGui::BeginMenu("export mesh"))
+            if (ImGui::BeginMenu("Assets"))
             {
-                const char *sceneFilter = "Scene (*.obj)\0*.obj\0";
-                const char *sceneFileExtension = "obj";
-                auto path = FileUtility::SaveFileDialogue(sceneFilter, sceneFileExtension);
-                if (path.empty())
-                    return;
-
-                fstream modelFileStream;
-                modelFileStream.open(path, ios::in);
-                YAML::Node meshNode;
-                auto model = new BorderlessEngine::Model(path);
-                auto meshes = model->ExportMesh();
-                for (size_t i = 0; i < meshes.size(); i++)
+                if (ImGui::MenuItem("import mesh"))
                 {
-                    auto mesh = meshes[i];
-                    for (size_t j = 0; j < mesh.vertices.size(); j++)
+                    const char *modelFilter = "Model (*.obj)\0*.obj\0";
+                    const char *modelFileExtension = "obj";
+                    const char *meshFileExtension = "mesh";
+                    auto path = FileUtility::SaveFileDialogue(modelFilter, modelFileExtension);
+                    if (path.empty())
+                        return;
+
+                    ModelImporter modelImporter = ModelImporter();
+                    modelImporter.OnImportAsset(AssetImportContext(path));
+                    
+
+                    fstream modelFileStream;
+                    modelFileStream.open(path, ios::in);
+                    YAML::Node meshNode;
+                    auto model = new BorderlessEngine::Model(path);
+                    auto meshes = model->ExportMesh();
+                    for (size_t i = 0; i < meshes.size(); i++)
                     {
-                        auto vertex = meshNode["meshes"][i]["vertices"][j];
-                        auto position = vertex["position"];
-                        position["x"] = mesh.vertices[i].Position.x;
-                        position["y"] = mesh.vertices[i].Position.y;
-                        position["z"] = mesh.vertices[i].Position.z;
+                        auto mesh = meshes[i];
+                        for (size_t j = 0; j < mesh.vertices.size(); j++)
+                        {
+                            auto vertex = meshNode["meshes"][i]["vertices"][j];
+                            auto position = vertex["position"];
+                            position["x"] = mesh.vertices[i].Position.x;
+                            position["y"] = mesh.vertices[i].Position.y;
+                            position["z"] = mesh.vertices[i].Position.z;
+                        }
                     }
+                    fstream meshFileStream;
+                    // 原地生成对应的专用mesh资产
+                    auto newPath = path.substr(0, path.find(string(".") + modelFileExtension));
+                    newPath = newPath + string(".") + meshFileExtension;
+                    meshFileStream.open(newPath, ios::out | ios::trunc);
+                    meshFileStream << meshNode;
+                    meshFileStream.close();
+
+                    modelFileStream.close();
+
+                    delete model;
                 }
-                fstream meshFileStream;
-                auto newPath = path.substr(0, path.find(".obj"));
-                newPath = newPath + ".mesh";
-                meshFileStream.open(newPath, ios::out | ios::trunc);
-                meshFileStream << meshNode;
-                meshFileStream.close();
-
-                modelFileStream.close();
-
-                delete model;
-
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
