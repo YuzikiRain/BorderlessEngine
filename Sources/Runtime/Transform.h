@@ -4,6 +4,8 @@
 #include "glm/glm.hpp"
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <rttr/registration>
+using namespace rttr;
 
 namespace BorderlessEngine
 {
@@ -56,35 +58,55 @@ namespace BorderlessEngine
 
 	private:
 		;
-	};
 
+		RTTR_ENABLE()
+	};
 }
 
-namespace YAML
+RTTR_REGISTRATION
 {
-	template <>
-	struct convert<glm::vec3>
-	{
-		static Node encode(const glm::vec3 &rhs)
-		{
-			Node node;
-			node.push_back(rhs.x);
-			node.push_back(rhs.y);
-			node.push_back(rhs.z);
-			return node;
-		}
+		registration::class_<Component>("Component")
+		.constructor<>();
 
-		static bool decode(const Node &node, glm::vec3 &rhs)
-		{
-			if (!node.IsSequence() || node.size() != 3)
-			{
-				return false;
-			}
+	registration::class_<BorderlessEngine::Transform>("Transform")
+		.constructor<>()
+		// .property("Yaw", &BorderlessEngine::Transform::Yaw)
+		.property("Position", &BorderlessEngine::Transform::Position)
+		.method("GetMatrix", &BorderlessEngine::Transform::GetMatrix);
 
-			rhs.x = node[0].as<float>();
-			rhs.y = node[1].as<float>();
-			rhs.z = node[2].as<float>();
-			return true;
-		}
-	};
+	registration::class_<glm::vec3>("glm::vec3")
+		.constructor<>()
+		.property("x", &glm::vec3::x)
+		.property("y", &glm::vec3::y)
+		.property("z", &glm::vec3::z)
+		.method("length", &glm::vec3::length);
 }
+
+// namespace YAML
+// {
+// 	template <>
+// 	struct convert<glm::vec3>
+// 	{
+// 		static Node encode(const glm::vec3 &rhs)
+// 		{
+// 			Node node;
+// 			node.push_back(rhs.x);
+// 			node.push_back(rhs.y);
+// 			node.push_back(rhs.z);
+// 			return node;
+// 		}
+
+// 		static bool decode(const Node &node, glm::vec3 &rhs)
+// 		{
+// 			if (!node.IsSequence() || node.size() != 3)
+// 			{
+// 				return false;
+// 			}
+
+// 			rhs.x = node[0].as<float>();
+// 			rhs.y = node[1].as<float>();
+// 			rhs.z = node[2].as<float>();
+// 			return true;
+// 		}
+// 	};
+// }

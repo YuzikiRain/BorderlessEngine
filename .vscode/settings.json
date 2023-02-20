@@ -59,6 +59,15 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "condition_variable": "cpp",
+        "csignal": "cpp",
+        "forward_list": "cpp",
+        "unordered_set": "cpp",
+        "mutex": "cpp",
+        "shared_mutex": "cpp",
+        "span": "cpp",
+        "registration": "cpp",
+        "bitset": "cpp"
     }
 }

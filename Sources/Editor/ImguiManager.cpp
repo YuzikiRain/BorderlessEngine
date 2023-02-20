@@ -14,6 +14,8 @@
 #include "FileUtility.h"
 #include "yaml-cpp/yaml.h"
 
+#include "Render/Model/Model.h"
+
 namespace BorderlessEditor
 {
     void ImguiManager::InitImgui(GLFWwindow *window)
@@ -84,30 +86,41 @@ namespace BorderlessEditor
 
                 ImGui::EndMenu();
             }
-            if (ImGui::BeginMenu("序列化mesh"))
+            if (ImGui::BeginMenu("export mesh"))
             {
-                const char *sceneFilter = "Scene (*.scene)\0*.scene\0";
-                const char *sceneFileExtension = "mesh";
+                const char *sceneFilter = "Scene (*.obj)\0*.obj\0";
+                const char *sceneFileExtension = "obj";
                 auto path = FileUtility::SaveFileDialogue(sceneFilter, sceneFileExtension);
                 if (path.empty())
                     return;
 
+                fstream modelFileStream;
+                modelFileStream.open(path, ios::in);
+                YAML::Node meshNode;
+                auto model = new BorderlessEngine::Model(path);
+                auto meshes = model->ExportMesh();
+                for (size_t i = 0; i < meshes.size(); i++)
+                {
+                    auto mesh = meshes[i];
+                    for (size_t j = 0; j < mesh.vertices.size(); j++)
+                    {
+                        auto vertex = meshNode["meshes"][i]["vertices"][j];
+                        auto position = vertex["position"];
+                        position["x"] = mesh.vertices[i].Position.x;
+                        position["y"] = mesh.vertices[i].Position.y;
+                        position["z"] = mesh.vertices[i].Position.z;
+                    }
+                }
+                fstream meshFileStream;
+                auto newPath = path.substr(0, path.find(".obj"));
+                newPath = newPath + ".mesh";
+                meshFileStream.open(newPath, ios::out | ios::trunc);
+                meshFileStream << meshNode;
+                meshFileStream.close();
 
+                modelFileStream.close();
 
-                // fstream sceneFileStream;
-                // sceneFileStream.open(path, ios::out | ios::trunc);
-                // YAML::Node meshNode;
-                // auto objs = EditorSceneManager::GetCurrentScene()->GetAllGameObjects();
-                // for (size_t i = 0; i < objs.size(); i++)
-                // {
-                //     auto obj = objs[i];
-                //     scene["gameObjects"][i]["name"] = obj->name;
-                //     scene["gameObjects"][i]["isActive"] = obj->isActive;
-                // }
-
-                // sceneFileStream << scene;
-
-                // sceneFileStream.close();
+                delete model;
 
                 ImGui::EndMenu();
             }
@@ -137,7 +150,7 @@ namespace BorderlessEditor
         //	w.EndDraw();
         // }
 
-        //ImGui::ShowDemoWindow();
+        ImGui::ShowDemoWindow();
 
         // Rendering
         ImGui::Render();

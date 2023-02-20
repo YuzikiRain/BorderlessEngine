@@ -27,11 +27,14 @@ namespace BorderlessEngine
 	public:
 		Model(string const &path, bool gamma = false);
 		void Draw(Shader &shader);
+		vector<Mesh> ExportMesh();
 
 	private:
 		vector<Mesh> meshes;
-		string directoryPath;
 		bool gammaCorrection;
+		// model data
+		vector<Texture> textures_loaded; // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+		string directory;
 
 		void loadModel(string const &path);
 		/// <summary>

@@ -33,6 +33,10 @@ namespace BorderlessEditor
 		{
 			if (ImGui::BeginMenu("Add Component"))
 			{
+				if (ImGui::MenuItem("Transform"))
+				{
+					obj->AddComponent<BorderlessEngine::Transform>();
+				}
 				if (ImGui::MenuItem("MeshFilter"))
 				{
 					const char *sceneFilter = "obj (*.obj)\0*.obj\0";
@@ -67,17 +71,83 @@ namespace BorderlessEditor
 		ImGui::NewLine();
 		ImGui::Spacing();
 
-		// 绘制物体的组件，TODO:实现反射，根据类型的字段类型自动绘制UI
-		auto transform = obj->GetComponent<BorderlessEngine::Transform>();
-		if (transform != NULL)
+		for (auto &kv : obj->components)
 		{
-			ImGui::Text("Transform");
-			float f3[3] = {transform->Position.x, transform->Position.y, transform->Position.z};
-			ImGui::InputFloat3("Position", f3);
-			transform->Position.x = f3[0];
-			transform->Position.y = f3[1];
-			transform->Position.z = f3[2];
+			auto name = kv.first;
+			ImGui::Text(name.c_str());
+			auto component = kv.second;
+			auto type = type::get_by_name(name);
+			for (auto &prop : type.get_properties())
+			{
+				auto temp = prop.get_type().get_name().to_string().c_str();
+				auto v1 = prop.get_value(component);
+				if (v1.is_type<glm::vec3>())
+				{
+					auto &position = v1.get_value<glm::vec3>();
+					float f3[3] = {position.x, position.y, position.z};
+				}
+				if (prop.get_type() == type::get<glm::vec3>())
+				{
+					auto &position = v1.get_value<glm::vec3>();
+					float f3[3] = {position.x, position.y, position.z};
+					ImGui::InputFloat3(prop.get_name().to_string().c_str(), f3);
+					position.x = f3[0];
+					position.y = f3[1];
+					position.z = f3[2];
+					prop.set_value(component, position);
+
+					for (auto &prop2 : prop.get_type().get_properties())
+					{
+						ImGui::InputFloat3("Position", f3);
+						if (prop.get_type() == type::get<float>())
+						{
+							prop2.get_value(component);
+						}
+					}
+
+					// variant var_prop = prop.get_value(component);
+
+					// float f3[3] = {transform->Position.x, transform->Position.y, transform->Position.z};
+					// ImGui::InputFloat3("Position", f3);
+					// transform->Position.x = f3[0];
+					// transform->Position.y = f3[1];
+					// transform->Position.z = f3[2];
+				}
+			}
 		}
+
+		// // 绘制物体的组件，TODO:实现反射，根据类型的字段类型自动绘制UI
+		// auto transform = obj->GetComponent<BorderlessEngine::Transform>();
+		// if (transform != NULL)
+		// {
+		// 	// 遍历成员函数(Method)、成员变量(Property)
+		// 	{
+		// 		type t = type::get<BorderlessEngine::Transform>();
+		// 		for (auto &prop : t.get_properties())
+		// 		{
+		// 			ImGui::Text(prop.get_name().to_string().c_str());
+		// 			if (prop.get_type() == type::get<glm::vec3>())
+		// 			{
+		// 				variant var_prop = prop.get_value(transform);
+		// 				float f3[3] = {transform->Position.x, transform->Position.y, transform->Position.z};
+		// 				ImGui::InputFloat3("Position", f3);
+		// 				transform->Position.x = f3[0];
+		// 				transform->Position.y = f3[1];
+		// 				transform->Position.z = f3[2];
+		// 			}
+		// 			std::cout << "name: " << prop.get_name() << std::endl;
+		// 		}
+
+		// 		for (auto &meth : t.get_methods())
+		// 			std::cout << "name: " << meth.get_name() << std::endl;
+		// 	}
+		// 	ImGui::Text("Transform");
+		// 	float f3[3] = {transform->Position.x, transform->Position.y, transform->Position.z};
+		// 	ImGui::InputFloat3("Position", f3);
+		// 	transform->Position.x = f3[0];
+		// 	transform->Position.y = f3[1];
+		// 	transform->Position.z = f3[2];
+		// }
 
 		auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
 		if (meshFilter != NULL)
