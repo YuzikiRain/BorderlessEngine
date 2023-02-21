@@ -19,6 +19,7 @@ namespace BorderlessEngine
 		TComponent *AddComponent()
 		{
 			TComponent *component = new TComponent();
+			component->SetGameObject(this);
 			auto name = type::get(*component).get_name().to_string();
 			// if (Object *o = dynamic_cast<Object *>(component))
 			// {

@@ -1,15 +1,23 @@
 #pragma once
 #include "ScriptedImporter.h"
-#include "Render/Model/Mesh.h"
 #include <fstream>
 #include <vector>
+#include "GameObject.h"
+#include "Transform.h"
+#include "Render/MeshFilter.h"
 #include "Render/Model/Vertex.h"
 #include "Render/Model/Mesh.h"
 #include "Render/Model/MeshFileHead.h"
+#include "Render/Model/MyMesh.h"
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 // #define STB_IMAGE_IMPLEMENTATION
 #include "stb-image/stb_image.h"
 
 using namespace std;
+using namespace BorderlessEngine;
 
 const char *modelFilter = "Model (*.obj)\0*.obj\0";
 const char *modelFileExtension = "obj";
@@ -24,6 +32,7 @@ namespace BorderlessEditor
         void OnImportAsset(AssetImportContext context)
         {
             auto path = context.path;
+            loadModel(path);
             // YAML::Node meshNode;
             auto model = new BorderlessEngine::Model(path);
             auto meshes = model->ExportMesh();
@@ -87,9 +96,11 @@ namespace BorderlessEditor
             }
             // retrieve the directory path of the filepath
             directory = path.substr(0, path.find_last_of('/'));
+            auto name = path.substr(path.find_last_of('/') + 1);
 
+            auto modelPrefab = new GameObject(name.c_str());
             // process ASSIMP's root node recursively
-            processNode(scene->mRootNode, scene);
+            processNode(scene->mRootNode, scene, modelPrefab->AddComponent<Transform>());
         }
 
         /// <summary>
@@ -97,7 +108,7 @@ namespace BorderlessEditor
         /// </summary>
         /// <param name="node"></param>
         /// <param name="scene"></param>
-        void processNode(aiNode *node, const aiScene *scene)
+        void processNode(aiNode *node, const aiScene *scene, Transform *transform)
         {
             // process each mesh located at the current node
             for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -106,11 +117,18 @@ namespace BorderlessEditor
                 // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
                 aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
                 meshes.push_back(processMesh(mesh, scene));
+
+                auto meshFilter = transform->GetGameObject()->AddComponent<MeshFilter>();
+                meshFilter->Mesh = &processMesh(mesh, scene);
             }
             // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
             for (unsigned int i = 0; i < node->mNumChildren; i++)
             {
-                processNode(node->mChildren[i], scene);
+                auto child = new GameObject();
+                auto t = child->AddComponent<Transform>();
+                transform->Children.push_back(t);
+
+                processNode(node->mChildren[i], scene, t);
             }
         }
 
@@ -198,7 +216,8 @@ namespace BorderlessEditor
             }
 
             // return a mesh object created from the extracted mesh data
-            return BorderlessEngine::Mesh(vertices, indices, textures);
+            // return BorderlessEngine::MyMesh(vertices, indices, textures);
+            return BorderlessEngine::MyMesh(vertices, indices);
         }
 
         vector<Texture> loadMaterialTextures(aiMaterial *material, aiTextureType type, string typeName)

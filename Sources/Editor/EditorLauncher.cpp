@@ -8,14 +8,13 @@
 #include "EditorSceneManager.h"
 #include "ImguiManager.h"
 #include "Input/InputSystem.h"
+#include "AssetExplorer.h"
+#include <filesystem>
 
 #include <iostream>
 #include <cmath>
 #include <chrono>
 #include <thread>
-
-#include "Render/MeshFilter.h"
-#include "Render/Shader.h"
 
 namespace BorderlessEditor
 {
@@ -42,6 +41,7 @@ namespace BorderlessEditor
         auto glfwWindow = BorderlessEngine::GLFWManager::GetGLFWWindow();
 
         // 初始化
+        // AssetExplorer::StartWatching(std::filesystem::current_path());
         EditorWindowManager::Init();
         ImguiManager::InitImgui(glfwWindow);
 

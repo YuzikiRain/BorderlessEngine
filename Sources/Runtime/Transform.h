@@ -1,9 +1,11 @@
 #pragma once
+#include <vector>
 #include "Component.h"
 #include "Vector3.h"
 #include "glm/glm.hpp"
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
+
 #include <rttr/registration>
 using namespace rttr;
 
@@ -21,6 +23,8 @@ namespace BorderlessEngine
 			Roll = 0.0f;
 
 			UpdateImmediately();
+
+			Children = vector<Transform *>();
 		}
 		// calculates the front vector from the Camera's (updated) Euler Angles
 		void UpdateImmediately()
@@ -56,6 +60,9 @@ namespace BorderlessEngine
 		float Pitch;
 		float Roll;
 
+		vector<Transform *> Children;
+		Transform *Parent;
+
 	private:
 		;
 
@@ -67,7 +74,7 @@ RTTR_REGISTRATION
 {
 	registration::class_<BorderlessEngine::Component>("Component")
 		.constructor<>();
-		
+
 	registration::class_<BorderlessEngine::Transform>("Transform")
 		.constructor<>()
 		// .property("Yaw", &BorderlessEngine::Transform::Yaw)
