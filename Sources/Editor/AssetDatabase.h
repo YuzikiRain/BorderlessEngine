@@ -2,6 +2,10 @@
 
 #include <string>
 #include "yaml-cpp/yaml.h"
+#include "GameObject.h"
+
+using namespace std;
+using namespace BorderlessEngine;
 
 namespace BorderlessEditor
 {
@@ -9,9 +13,17 @@ namespace BorderlessEditor
     {
     public:
         template <typename T>
-        static T LoadAssetAtPath<T>(std::string path)
+        static T LoadAssetAtPath(std::string path)
         {
             
+        }
+
+        static void SaveAsset(Object object, string path)
+        {
+            if (typeid(object) == typeid(GameObject))
+            {
+
+            }
         }
 
     private:

@@ -2,6 +2,7 @@
 #include "ScriptedImporter.h"
 #include <fstream>
 #include <vector>
+#include "AssetDatabase.h"
 #include "GameObject.h"
 #include "Transform.h"
 #include "Render/MeshFilter.h"
@@ -32,10 +33,12 @@ namespace BorderlessEditor
         void OnImportAsset(AssetImportContext context)
         {
             auto path = context.path;
-            loadModel(path);
+            auto modelPrefab = loadModel(path);
+            AssetDatabase::SaveAsset(modelPrefab, path);
+
             // YAML::Node meshNode;
-            auto model = new BorderlessEngine::Model(path);
-            auto meshes = model->ExportMesh();
+            // auto model = new BorderlessEngine::Model(path);
+            // auto meshes = model->ExportMesh();
             // for (size_t i = 0; i < meshes.size(); i++)
             // {
             //     auto mesh = meshes[i];
@@ -55,35 +58,35 @@ namespace BorderlessEditor
             mesh_file_head.type_[2] = 's';
             mesh_file_head.type_[3] = 'h';
 
-            int i = 0;
-            for (auto mesh : meshes)
-            {
-                mesh_file_head.vertex_num_ = mesh.vertices.size();
-                mesh_file_head.vertex_index_num_ = mesh.indices.size();
+            // int i = 0;
+            // for (auto mesh : meshes)
+            // {
+            //     mesh_file_head.vertex_num_ = mesh.vertices.size();
+            //     mesh_file_head.vertex_index_num_ = mesh.indices.size();
 
-                std::fstream output_file_stream;
-                // 原地生成对应的专用mesh资产
-                auto newPath = path.substr(0, path.find(string(".") + modelFileExtension));
-                newPath = newPath + to_string(i) + string(".") + meshFileExtension;
-                output_file_stream.open(newPath, ios::out | ios::binary);
+            //     std::fstream output_file_stream;
+            //     // 原地生成对应的专用mesh资产
+            //     auto newPath = path.substr(0, path.find(string(".") + modelFileExtension));
+            //     newPath = newPath + to_string(i) + string(".") + meshFileExtension;
+            //     output_file_stream.open(newPath, ios::out | ios::binary);
 
-                // 写入文件头
-                output_file_stream.write((char *)&mesh_file_head, sizeof(mesh_file_head));
-                // 写入顶点数据
-                output_file_stream.write((char *)&mesh.vertices[0], mesh_file_head.vertex_num_ * sizeof(Vertex));
-                // 写入索引数据
-                output_file_stream.write((char *)&mesh.indices[0], mesh_file_head.vertex_index_num_ * sizeof(unsigned int));
+            //     // 写入文件头
+            //     output_file_stream.write((char *)&mesh_file_head, sizeof(mesh_file_head));
+            //     // 写入顶点数据
+            //     output_file_stream.write((char *)&mesh.vertices[0], mesh_file_head.vertex_num_ * sizeof(Vertex));
+            //     // 写入索引数据
+            //     output_file_stream.write((char *)&mesh.indices[0], mesh_file_head.vertex_index_num_ * sizeof(unsigned int));
 
-                output_file_stream.close();
-            }
+            //     output_file_stream.close();
+            // }
         }
 
     private:
         string directory;
-        vector<BorderlessEngine::Mesh> meshes;
+        vector<BorderlessEngine::MyMesh> meshes;
         vector<Texture> textures_loaded; // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
-        void loadModel(string const &path)
+        GameObject loadModel(string const &path)
         {
             // read file via ASSIMP
             Assimp::Importer importer;
@@ -92,15 +95,17 @@ namespace BorderlessEditor
             if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
             {
                 cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
-                return;
+                return NULL;
             }
             // retrieve the directory path of the filepath
             directory = path.substr(0, path.find_last_of('/'));
             auto name = path.substr(path.find_last_of('/') + 1);
 
-            auto modelPrefab = new GameObject(name.c_str());
+            auto modelPrefab = GameObject(name.c_str());
             // process ASSIMP's root node recursively
-            processNode(scene->mRootNode, scene, modelPrefab->AddComponent<Transform>());
+            processNode(scene->mRootNode, scene, modelPrefab.AddComponent<Transform>());
+
+            return modelPrefab;
         }
 
         /// <summary>
@@ -119,7 +124,7 @@ namespace BorderlessEditor
                 meshes.push_back(processMesh(mesh, scene));
 
                 auto meshFilter = transform->GetGameObject()->AddComponent<MeshFilter>();
-                meshFilter->Mesh = &processMesh(mesh, scene);
+                processMesh(mesh, scene);
             }
             // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
             for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -132,7 +137,7 @@ namespace BorderlessEditor
             }
         }
 
-        BorderlessEngine::Mesh processMesh(aiMesh *mesh, const aiScene *scene)
+        BorderlessEngine::MyMesh processMesh(aiMesh *mesh, const aiScene *scene)
         {
             // data to fill
             vector<Vertex> vertices;

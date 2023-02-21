@@ -2,6 +2,7 @@
 #include "Model/Mesh.h"
 #include "Component.h"
 #include "Model/Model.h"
+#include "Model/MyMesh.h"
 
 namespace BorderlessEngine
 {
@@ -9,7 +10,7 @@ namespace BorderlessEngine
 	{
 	public:
 		MeshFilter() {}
-		Mesh *Mesh;
+		MyMesh *Mesh;
 		Model *Model;
 	};
 }

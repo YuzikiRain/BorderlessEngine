@@ -54,6 +54,7 @@ namespace BorderlessEngine
 			// }
 			return NULL;
 		}
+		
 		std::unordered_map<std::string, Component *> components;
 		// std::list<Component *> components;
 		char *name;
