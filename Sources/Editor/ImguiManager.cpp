@@ -98,8 +98,10 @@ namespace BorderlessEditor
                     if (path.empty())
                         return;
 
+                    auto newPath = path.substr(0, path.find(string(".") + modelFileExtension));
+                    newPath = newPath + string(".") + meshFileExtension;
                     ModelImporter modelImporter = ModelImporter();
-                    modelImporter.OnImportAsset(AssetImportContext(path));
+                    modelImporter.OnImportAsset(AssetImportContext(path, newPath));
                     
 
                     // fstream modelFileStream;

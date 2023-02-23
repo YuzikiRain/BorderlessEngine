@@ -1,9 +1,12 @@
 #pragma once
 #include <string>
 
+using namespace std;
+
 class AssetImportContext
 {
 public:
-    AssetImportContext(std::string path) : path(path) {}
-    const std::string path;
+    AssetImportContext(string path, string newPath) : path(path), newPath(newPath) {}
+    const string path;
+    const string newPath;
 };

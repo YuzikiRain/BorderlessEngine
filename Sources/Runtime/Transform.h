@@ -60,6 +60,7 @@ namespace BorderlessEngine
 		float Pitch;
 		float Roll;
 
+		int childIndex;
 		vector<Transform *> Children;
 		Transform *Parent;
 

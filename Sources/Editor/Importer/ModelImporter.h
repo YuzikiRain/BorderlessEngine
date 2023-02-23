@@ -33,8 +33,11 @@ namespace BorderlessEditor
         void OnImportAsset(AssetImportContext context)
         {
             auto path = context.path;
+            auto newPath = context.newPath;
             auto modelPrefab = loadModel(path);
-            AssetDatabase::SaveAsset(modelPrefab, path);
+            auto p = &modelPrefab;
+            AssetDatabase::SaveAsset(modelPrefab, newPath);
+            return;
 
             // YAML::Node meshNode;
             // auto model = new BorderlessEngine::Model(path);
@@ -86,7 +89,7 @@ namespace BorderlessEditor
         vector<BorderlessEngine::MyMesh> meshes;
         vector<Texture> textures_loaded; // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
-        GameObject loadModel(string const &path)
+        GameObject* loadModel(string const &path)
         {
             // read file via ASSIMP
             Assimp::Importer importer;
@@ -101,9 +104,9 @@ namespace BorderlessEditor
             directory = path.substr(0, path.find_last_of('/'));
             auto name = path.substr(path.find_last_of('/') + 1);
 
-            auto modelPrefab = GameObject(name.c_str());
+            auto modelPrefab = new GameObject(name.c_str());
             // process ASSIMP's root node recursively
-            processNode(scene->mRootNode, scene, modelPrefab.AddComponent<Transform>());
+            processNode(scene->mRootNode, scene, modelPrefab->AddComponent<Transform>());
 
             return modelPrefab;
         }
@@ -123,14 +126,15 @@ namespace BorderlessEditor
                 aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
                 meshes.push_back(processMesh(mesh, scene));
 
-                auto meshFilter = transform->GetGameObject()->AddComponent<MeshFilter>();
+                transform->GetGameObject()->AddComponent<MeshFilter>();
                 processMesh(mesh, scene);
             }
             // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
             for (unsigned int i = 0; i < node->mNumChildren; i++)
             {
-                auto child = new GameObject();
+                auto child = new GameObject(node->mName.C_Str());
                 auto t = child->AddComponent<Transform>();
+                t->Parent = transform;
                 transform->Children.push_back(t);
 
                 processNode(node->mChildren[i], scene, t);
