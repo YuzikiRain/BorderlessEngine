@@ -89,7 +89,7 @@ namespace BorderlessEditor
         vector<BorderlessEngine::MyMesh> meshes;
         vector<Texture> textures_loaded; // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
-        GameObject* loadModel(string const &path)
+        GameObject *loadModel(string const &path)
         {
             // read file via ASSIMP
             Assimp::Importer importer;
@@ -105,9 +105,11 @@ namespace BorderlessEditor
             auto name = path.substr(path.find_last_of('/') + 1);
 
             auto modelPrefab = new GameObject(name.c_str());
+            auto t = modelPrefab->AddComponent<Transform>();
             // process ASSIMP's root node recursively
-            processNode(scene->mRootNode, scene, modelPrefab->AddComponent<Transform>());
+            processNode(scene->mRootNode, scene, t);
 
+            // delete scene;
             return modelPrefab;
         }
 
