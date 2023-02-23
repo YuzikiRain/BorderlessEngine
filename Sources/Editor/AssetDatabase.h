@@ -36,7 +36,7 @@ namespace BorderlessEditor
                 {
                     auto transform = q.back();
                     q.pop();
-                    Test(transform, node, count);
+                    ProcessGameObject(transform, node, count);
                     for (int i = 0; i < transform->Children.size(); i++)
                     {
                         q.push(transform->Children[i]);
@@ -49,7 +49,7 @@ namespace BorderlessEditor
             }
         }
 
-        static void Test(Transform *transform, YAML::Node& node, int count)
+        static void ProcessGameObject(Transform *transform, YAML::Node& node, int count)
         {
             auto obj = transform->GetGameObject();
             YAML::Node g;

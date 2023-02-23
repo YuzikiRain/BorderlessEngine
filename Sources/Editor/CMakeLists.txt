@@ -25,8 +25,10 @@ set(GLAD_SRC ${PACKAGE_SOURCE_PATH}/glad)
 list(APPEND PROJECT_SOURCE ${GLAD_SRC}/glad.c)
 
 # assimp
-set(ASSIMP_LIB ${PACKAGE_LIBRARY_PATH}/assimp/libassimp.dll)
+# set(ASSIMP_LIB ${PACKAGE_LIBRARY_PATH}/assimp/libassimp.dll)
 # set(ASSIMP_LIB ${PACKAGE_LIBRARY_PATH}/assimp/assimp-vc142-mtd.dll)
+# set(ASSIMP_LIB ${PACKAGE_LIBRARY_PATH}/assimp/assimp-vc140-mt.dll)
+set(ASSIMP_LIB ${PACKAGE_LIBRARY_PATH}/assimp/libassimp-5.dll)
 list(APPEND PROJECT_LIBRARIES ${ASSIMP_LIB})
 
 # stb_image
