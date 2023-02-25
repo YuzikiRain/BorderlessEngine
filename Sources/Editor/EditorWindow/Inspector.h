@@ -1,5 +1,8 @@
 #pragma once
 #include <EditorWindow/EditorWindow.h>
+#include "Component.h"
+
+using namespace BorderlessEngine;
 
 namespace BorderlessEditor
 {
@@ -8,5 +11,8 @@ namespace BorderlessEditor
 	public:
 		Inspector();
 		void Draw();
+
+	private:
+		void DrawComponent(Component* component);
 	};
 }

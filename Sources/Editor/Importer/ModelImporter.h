@@ -112,6 +112,8 @@ namespace BorderlessEditor
             auto t = modelPrefab->AddComponent<Transform>();
             // process ASSIMP's root node recursively
             processNode(scene->mRootNode, scene, t);
+            return NULL;
+            
 
             return modelPrefab;
         }

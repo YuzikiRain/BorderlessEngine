@@ -68,7 +68,7 @@ namespace BorderlessEditor
             // 交换缓冲区
             glfwSwapBuffers(glfwWindow);
             // 剩余的时间进行线程休眠，不进行多余的计算
-            WaitForNextFrame();
+            // WaitForNextFrame();
         }
     }
 

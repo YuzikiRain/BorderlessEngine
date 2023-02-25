@@ -16,6 +16,7 @@ namespace BorderlessEngine
 	{
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].Draw(shader);
+			
 	}
 
 	vector<Mesh> Model::ExportMesh()
