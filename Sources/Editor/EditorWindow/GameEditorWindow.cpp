@@ -5,9 +5,9 @@
 #include "Scene.h"
 #include "EditorSceneManager.h"
 #include "Transform.h"
-#include "Render/MeshRenderer.h"
-#include "Render/MeshFilter.h"
-#include "Render/Material.h"
+#include "MeshRenderer.h"
+#include "MeshFilter.h"
+#include "Material.h"
 
 namespace BorderlessEditor
 {

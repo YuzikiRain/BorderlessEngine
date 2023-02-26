@@ -1,8 +1,8 @@
 #pragma once
-#include "Model/Mesh.h"
+#include "Render/Model/Mesh.h"
 #include "Component.h"
-#include "Model/Model.h"
-#include "Model/MyMesh.h"
+#include "Render/Model/Model.h"
+#include "Render/Model/MyMesh.h"
 
 namespace BorderlessEngine
 {

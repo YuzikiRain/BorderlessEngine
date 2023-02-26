@@ -1,8 +1,8 @@
 #include "Scene.h"
 #include <vector>
-#include "Render/MeshRenderer.h"
-#include "Render/MeshFilter.h"
-#include "Render/Material.h"
+#include "MeshRenderer.h"
+#include "MeshFilter.h"
+#include "Material.h"
 #include "Transform.h"
 #include <yaml-cpp/yaml.h>
 

@@ -9,6 +9,7 @@
 #include "ImguiManager.h"
 #include "Input/InputSystem.h"
 #include "AssetExplorer.h"
+#include "RTTRRegistration.h"
 #include <filesystem>
 
 #include <iostream>
