@@ -34,6 +34,14 @@ namespace BorderlessEditor
 		{
 			if (ImGui::BeginMenu("Add Component"))
 			{
+				auto componentTypes = type::get<Component>().get_derived_classes();
+				for (auto &componentType : componentTypes)
+				{
+					if (ImGui::MenuItem(componentType.get_name().to_string().c_str()))
+					{
+						obj->AddComponent(componentType.get_name().to_string());
+					}
+				}
 				if (ImGui::MenuItem("Transform"))
 				{
 					obj->AddComponent<BorderlessEngine::Transform>();
@@ -72,6 +80,7 @@ namespace BorderlessEditor
 		ImGui::NewLine();
 		ImGui::Spacing();
 
+		// 根据类型的字段类型自动绘制UI
 		for (auto &kv : obj->components)
 		{
 			auto name = kv.first;
@@ -79,39 +88,6 @@ namespace BorderlessEditor
 			auto componentPointer = kv.second;
 			DrawComponent(componentPointer);
 		}
-
-		// // 绘制物体的组件，TODO:实现反射，根据类型的字段类型自动绘制UI
-		// auto transform = obj->GetComponent<BorderlessEngine::Transform>();
-		// if (transform != NULL)
-		// {
-		// 	// 遍历成员函数(Method)、成员变量(Property)
-		// 	{
-		// 		type t = type::get<BorderlessEngine::Transform>();
-		// 		for (auto &prop : t.get_properties())
-		// 		{
-		// 			ImGui::Text(prop.get_name().to_string().c_str());
-		// 			if (prop.get_type() == type::get<glm::vec3>())
-		// 			{
-		// 				variant var_prop = prop.get_value(transform);
-		// 				float f3[3] = {transform->Position.x, transform->Position.y, transform->Position.z};
-		// 				ImGui::InputFloat3("Position", f3);
-		// 				transform->Position.x = f3[0];
-		// 				transform->Position.y = f3[1];
-		// 				transform->Position.z = f3[2];
-		// 			}
-		// 			std::cout << "name: " << prop.get_name() << std::endl;
-		// 		}
-
-		// 		for (auto &meth : t.get_methods())
-		// 			std::cout << "name: " << meth.get_name() << std::endl;
-		// 	}
-		// 	ImGui::Text("Transform");
-		// 	float f3[3] = {transform->Position.x, transform->Position.y, transform->Position.z};
-		// 	ImGui::InputFloat3("Position", f3);
-		// 	transform->Position.x = f3[0];
-		// 	transform->Position.y = f3[1];
-		// 	transform->Position.z = f3[2];
-		// }
 
 		auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
 		if (meshFilter != NULL)

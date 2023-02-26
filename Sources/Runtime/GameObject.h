@@ -23,12 +23,16 @@ namespace BorderlessEngine
 			TComponent *component = new TComponent();
 			component->SetGameObject(this);
 			auto name = type::get(*component).get_name().to_string();
-			// if (Object *o = dynamic_cast<Object *>(component))
-			// {
-			// 	o->Name = (typeid(component).name());
-			// }
 			components[name] = component;
-			// components.emplace_back(component);
+			return component;
+		}
+		Component* AddComponent(string componentType)
+		{
+			auto type = type::get_by_name(componentType);
+			variant obj = type.create();
+			Component* component = obj.get_value<Component*>();
+			component->SetGameObject(this);
+			components[componentType] = component;
 			return component;
 		}
 
@@ -56,7 +60,7 @@ namespace BorderlessEngine
 			// }
 			return NULL;
 		}
-		
+
 		std::unordered_map<std::string, Component *> components;
 		// std::list<Component *> components;
 		string name;

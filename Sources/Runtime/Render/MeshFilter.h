@@ -12,5 +12,10 @@ namespace BorderlessEngine
 		MeshFilter() {}
 		MyMesh *Mesh;
 		Model *Model;
+
+	private:
+		;
+
+		RTTR_ENABLE(Component)
 	};
 }
