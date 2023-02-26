@@ -37,7 +37,7 @@ namespace BorderlessEditor
 			ImGuiTreeNodeFlags node_flags = base_flags;
 			if (BorderlessEditor::Selection::current == obj)
 				node_flags |= ImGuiTreeNodeFlags_Selected;
-			bool node_open = ImGui::TreeNodeEx((void *)(intptr_t)i, node_flags, obj->name);
+			bool node_open = ImGui::TreeNodeEx((void *)(intptr_t)i, node_flags, obj->name.c_str());
 			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 			{
 				BorderlessEditor::Selection::current = obj;

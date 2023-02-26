@@ -8,12 +8,14 @@
 #include <rttr/registration>
 using namespace rttr;
 
+using namespace std;
+
 namespace BorderlessEngine
 {
 	class GameObject : public Object
 	{
 	public:
-		GameObject(const char *newName = "New GameObject", bool isActive = true);
+		GameObject(string newName = "New GameObject", bool isActive = true);
 		~GameObject();
 		template <typename TComponent>
 		TComponent *AddComponent()
@@ -57,10 +59,10 @@ namespace BorderlessEngine
 		
 		std::unordered_map<std::string, Component *> components;
 		// std::list<Component *> components;
-		char *name;
+		string name;
 		bool isActive;
 
 	private:
-		void SetName(const char *name);
+		void SetName(string name);
 	};
 }
