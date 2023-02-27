@@ -26,11 +26,11 @@ namespace BorderlessEngine
 			components[name] = component;
 			return component;
 		}
-		Component* AddComponent(string componentType)
+		Component *AddComponent(string componentType)
 		{
 			auto type = type::get_by_name(componentType);
 			variant obj = type.create();
-			Component* component = obj.get_value<Component*>();
+			Component *component = obj.get_value<Component *>();
 			component->SetGameObject(this);
 			components[componentType] = component;
 			return component;

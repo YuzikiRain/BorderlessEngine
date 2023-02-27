@@ -10,8 +10,6 @@
 #include "Render/Model/Model.h"
 #include "Material.h"
 #include <stdio.h>
-#include "Camera.h"
-#include "Transform.h"
 #include "CustomPropertyDrawer/Vector3PropertyDrawer.h"
 
 namespace BorderlessEditor
@@ -42,30 +40,6 @@ namespace BorderlessEditor
 						obj->AddComponent(componentType.get_name().to_string());
 					}
 				}
-				if (ImGui::MenuItem("Transform"))
-				{
-					obj->AddComponent<BorderlessEngine::Transform>();
-				}
-				if (ImGui::MenuItem("MeshFilter"))
-				{
-					const char *sceneFilter = "obj (*.obj)\0*.obj\0";
-					const char *sceneFileExtension = "obj";
-					auto path = FileUtility::OpenFileDialogue(sceneFilter, sceneFileExtension);
-					if (path.empty())
-						return;
-
-					BorderlessEngine::MeshFilter *meshFilter = obj->AddComponent<BorderlessEngine::MeshFilter>();
-					meshFilter->Model = new BorderlessEngine::Model(path);
-					printf(meshFilter->Model->Name.c_str());
-				}
-				if (ImGui::MenuItem("MeshRenderer"))
-				{
-					obj->AddComponent<BorderlessEngine::MeshRenderer>();
-				}
-				if (ImGui::MenuItem("Camera"))
-				{
-					obj->AddComponent<BorderlessEngine::Camera>();
-				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndPopup();
@@ -87,62 +61,6 @@ namespace BorderlessEditor
 			ImGui::Text(name.c_str());
 			auto componentPointer = kv.second;
 			DrawComponent(componentPointer);
-		}
-
-		auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
-		if (meshFilter != NULL)
-		{
-			ImGui::Text("MeshFilter");
-			ImGui::LabelText("MeshFilter.Reference", meshFilter->Model != NULL ? meshFilter->Model->Path.c_str() : "null");
-			// auto a = meshFilter->Mesh->Name;
-			// ImGui::LabelText("MeshFilter.Reference", meshFilter->Mesh != NULL ? meshFilter->Mesh->Path.c_str() : "null");
-			if (ImGui::Button("set"))
-			{
-				const char *sceneFilter = "Mesh (*.mesh)\0*.mesh\0";
-				const char *sceneFileExtension = "mesh";
-				string path = FileUtility::OpenFileDialogue(sceneFilter, sceneFileExtension);
-				if (!path.empty())
-				{
-					// YAML::Node data = YAML::LoadFile(path);
-					// BorderlessEngine::Mesh *mesh = new BorderlessEngine::Mesh();
-					// mesh.
-					// for (size_t i = 0; i < data["gameObjects"].size(); i++)
-					// {
-					// 	auto name = data["gameObjects"][i]["name"].as<string>();
-					// 	objs.push_back(
-					// 		new BorderlessEngine::GameObject(
-					// 			name.c_str(),
-					// 			data["gameObjects"][i]["isActive"].as<bool>()));
-					// }
-					// currentScene = new BorderlessEngine::Scene("scene", objs);
-				}
-			}
-		}
-		auto material = obj->GetComponent<BorderlessEngine::Material>();
-		if (ImGui::Button("Set Vertex Shader"))
-		{
-			const char *shaderFilter = "Shader (*.mesh)\0*.mesh\0";
-			const char *shaderFileExtension = "vs";
-			string path = FileUtility::OpenFileDialogue(shaderFilter, shaderFileExtension);
-			if (!path.empty())
-			{
-				YAML::Node data = YAML::LoadFile(path);
-				material->shader->ChangeVertex(path.c_str());
-			}
-		}
-		if (ImGui::Button("Set Fragment Shader"))
-		{
-			const char *shaderFilter = "Shader (*.fs)\0*.fs\0";
-			const char *shaderFileExtension = "fs";
-			string path = FileUtility::OpenFileDialogue(shaderFilter, shaderFileExtension);
-			if (!path.empty())
-			{
-				YAML::Node data = YAML::LoadFile(path);
-				material->shader->ChangeFragment(path.c_str());
-			}
-		}
-		if (ImGui::Button("Edit"))
-		{
 		}
 	}
 

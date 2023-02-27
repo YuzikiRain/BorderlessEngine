@@ -18,7 +18,7 @@ RTTR_REGISTRATION
 		.property("Model", &BorderlessEngine::MeshFilter::Model);
 
 	registration::class_<BorderlessEngine::Transform>("Transform")
-		.constructor<>()
+		.constructor<>()(policy::ctor::as_raw_ptr)
 		// .property("Yaw", &BorderlessEngine::Transform::Yaw)
 		.property("Position", &BorderlessEngine::Transform::Position)
 		.method("GetMatrix", &BorderlessEngine::Transform::GetMatrix);
@@ -29,5 +29,4 @@ RTTR_REGISTRATION
 		.property("y", &glm::vec3::y)
 		.property("z", &glm::vec3::z)
 		.method("length", &glm::vec3::length);
-
 }
