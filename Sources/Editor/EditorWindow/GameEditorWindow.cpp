@@ -44,9 +44,9 @@ namespace BorderlessEditor
             auto obj = *it;
             auto transform = obj->GetComponent<BorderlessEngine::Transform>();
             auto meshFilter = obj->GetComponent<BorderlessEngine::MeshFilter>();
-            auto material = *obj->GetComponent<BorderlessEngine::Material>();
+            auto material = obj->GetComponent<BorderlessEngine::Material>();
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, transform->Position);
+            model = glm::translate(model, transform.Position);
             material.shader->setMatrix4("model", model);
             glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
             // glm::mat4 view = glm::lookAt(transform->Position, transform->Position + transform->Front, transform->Up);
@@ -55,7 +55,7 @@ namespace BorderlessEditor
             material.shader->setMatrix4("projection", projection);
 
             material.shader->use();
-            meshFilter->Model->Draw(*material.shader);
+            meshFilter.Model->Draw(*material.shader);
 
             // obj.GetComponent<MeshRenderer>();
             // w.BeginDraw();

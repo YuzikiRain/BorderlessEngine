@@ -1,7 +1,9 @@
 #pragma once
 #include <EditorWindow/EditorWindow.h>
 #include "Component.h"
+#include <memory>
 
+using namespace std;
 using namespace BorderlessEngine;
 
 namespace BorderlessEditor
@@ -13,6 +15,6 @@ namespace BorderlessEditor
 		void Draw();
 
 	private:
-		void DrawComponent(Component* component);
+		void DrawComponent(shared_ptr<Component> componentPointer);
 	};
 }

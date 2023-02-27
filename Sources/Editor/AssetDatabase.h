@@ -29,7 +29,7 @@ namespace BorderlessEditor
                 fstream sceneFileStream;
                 sceneFileStream.open(path, ios::out | ios::trunc);
                 YAML::Node node;
-                queue<Transform *> q = queue<Transform *>();
+                queue<Transform> q = queue<Transform>();
                 q.push(obj->GetComponent<Transform>());
                 int count = 0;
                 while (!q.empty())
@@ -37,9 +37,9 @@ namespace BorderlessEditor
                     auto transform = q.back();
                     q.pop();
                     ProcessGameObject(transform, node, count);
-                    for (int i = 0; i < transform->Children.size(); i++)
+                    for (int i = 0; i < transform.Children.size(); i++)
                     {
-                        q.push(transform->Children[i]);
+                        q.push(*transform.Children[i]);
                     }
                     count++;
                 }
@@ -49,19 +49,18 @@ namespace BorderlessEditor
             }
         }
 
-        static void ProcessGameObject(Transform *transform, YAML::Node& node, int count)
+        static void ProcessGameObject(Transform &transform, YAML::Node &node, int count)
         {
-            auto obj = transform->GetGameObject();
+            auto obj = transform.GetGameObject();
             YAML::Node g;
             g["name"] = obj->name;
             g["isActive"] = obj->isActive;
             // g[count]["id"] = obj->name;
             node["gameObjects"].push_back(g);
             YAML::Node t;
-            t["index"] = transform->childIndex;
+            t["index"] = transform.childIndex;
             node["transform"].push_back(t);
             // node["transform"][count]["gameObject"] = obj->childIndex;
         }
-
     };
 }

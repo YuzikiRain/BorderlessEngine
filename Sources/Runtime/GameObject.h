@@ -2,9 +2,8 @@
 #include "Object.h"
 #include "Component.h"
 #include <string>
-#include <list>
 #include <unordered_map>
-#include <typeinfo>
+#include <iostream>
 #include <rttr/registration>
 using namespace rttr;
 
@@ -18,22 +17,22 @@ namespace BorderlessEngine
 		GameObject(string newName = "New GameObject", bool isActive = true);
 		~GameObject();
 		template <typename TComponent>
-		TComponent *AddComponent()
+		TComponent &AddComponent()
 		{
-			TComponent *component = new TComponent();
-			component->SetGameObject(this);
-			auto name = type::get(*component).get_name().to_string();
-			components[name] = component;
-			return component;
+			shared_ptr<TComponent> componentPointer = make_shared<TComponent>();
+			componentPointer->SetGameObject(this);
+			auto name = type::get(*componentPointer).get_name().to_string();
+			components[name] = componentPointer;
+			return *componentPointer;
 		}
-		Component *AddComponent(string componentType)
+		Component &AddComponent(string componentType)
 		{
 			auto type = type::get_by_name(componentType);
 			variant obj = type.create();
-			Component *component = obj.get_value<Component *>();
-			component->SetGameObject(this);
-			components[componentType] = component;
-			return component;
+			shared_ptr<Component> componentPointer = obj.get_value<shared_ptr<Component>>();
+			componentPointer->SetGameObject(this);
+			components[componentType] = componentPointer;
+			return *componentPointer;
 		}
 
 		template <typename TComponent>
@@ -41,28 +40,28 @@ namespace BorderlessEngine
 		{
 			auto name = type::get(component).get_name().to_string();
 			components.erase(name);
-			// components.remove(component);
 		}
 
 		template <typename TComponent>
-		TComponent *GetComponent()
+		TComponent &GetComponent()
 		{
-			for (auto &kv : components)
+			try
 			{
-				if (TComponent *target = dynamic_cast<TComponent *>(kv.second))
-					return target;
-				// cout<<kv.first<<kv.second<<endl;
+				for (auto &kv : components)
+				{
+					if (shared_ptr<TComponent> target = dynamic_pointer_cast<TComponent>(kv.second))
+						return *target;
+				}
+				throw runtime_error("can't find component of type");
 			}
-			// for (Component *component : components)
-			// {
-			// 	if (TComponent *target = dynamic_cast<TComponent *>(component))
-			// 		return target;
-			// }
-			return NULL;
+			catch (const std::exception &e)
+			{
+				std::cerr << e.what() << '\n';
+			}
 		}
 
-		std::unordered_map<std::string, Component *> components;
-		// std::list<Component *> components;
+		// std::unordered_map<std::string, Component *> components;
+		std::unordered_map<std::string, shared_ptr<Component>> components;
 		string name;
 		bool isActive;
 

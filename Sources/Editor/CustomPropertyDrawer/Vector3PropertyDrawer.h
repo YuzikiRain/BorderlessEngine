@@ -9,7 +9,7 @@ namespace BorderlessEditor
     class Vector3PropertyDrawer
     {
     public:
-        static void Draw(const rttr::property &property, Component *componentPointer)
+        static void Draw(const rttr::property &property, shared_ptr<Component> componentPointer)
         {
             auto propertyValue = property.get_value(componentPointer);
             if (propertyValue.is_type<glm::vec3>())

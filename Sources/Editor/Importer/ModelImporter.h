@@ -123,7 +123,7 @@ namespace BorderlessEditor
         /// </summary>
         /// <param name="node"></param>
         /// <param name="scene"></param>
-        void processNode(aiNode *node, const aiScene *scene, Transform *transform)
+        void processNode(aiNode *node, const aiScene *scene, Transform& transform)
         {
             // process each mesh located at the current node
             for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -136,10 +136,9 @@ namespace BorderlessEditor
 
                 auto name = mesh->mName.C_Str();
                 auto child = new GameObject(name != "" ? name : "mesh" + i);
-                auto t = child->AddComponent<Transform>();
-                t->Parent = transform;
-                transform->Children.push_back(t);
-                // TODO: 添加此行会报错
+                auto childTransform = child->AddComponent<Transform>();
+                childTransform.Parent = &transform;
+                transform.Children.push_back(&childTransform);
                 // child->AddComponent<MeshFilter>();
             }
             // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
@@ -147,11 +146,11 @@ namespace BorderlessEditor
             {
                 auto name = node->mName.C_Str();
                 auto child = new GameObject(name != "" ? name : "gameObject" + i);
-                auto t = child->AddComponent<Transform>();
-                t->Parent = transform;
-                transform->Children.push_back(t);
+                auto childTransform = child->AddComponent<Transform>();
+                childTransform.Parent = &transform;
+                transform.Children.push_back(&childTransform);
 
-                processNode(node->mChildren[i], scene, t);
+                processNode(node->mChildren[i], scene, childTransform);
             }
         }
 

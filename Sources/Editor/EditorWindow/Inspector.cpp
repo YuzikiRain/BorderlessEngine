@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include "CustomPropertyDrawer/Vector3PropertyDrawer.h"
 
+using namespace std;
+
 namespace BorderlessEditor
 {
 	const unsigned int nameLimit = 30;
@@ -64,7 +66,7 @@ namespace BorderlessEditor
 		}
 	}
 
-	void Inspector::DrawComponent(Component *componentPointer)
+	void Inspector::DrawComponent(shared_ptr<Component> componentPointer)
 	{
 		auto type = type::get(*componentPointer);
 		// 绘制所有字段
