@@ -11,6 +11,7 @@
 #include "Material.h"
 #include <stdio.h>
 #include "CustomPropertyDrawer/Vector3PropertyDrawer.h"
+#include "CustomPropertyDrawer/ObjectPropertyDrawer.h"
 
 using namespace std;
 
@@ -75,6 +76,10 @@ namespace BorderlessEditor
 			if (property.get_type() == type::get<glm::vec3>())
 			{
 				Vector3PropertyDrawer::Draw(property, componentPointer);
+			}
+			else
+			{
+				ObjectPropertyDrawer::Draw(property, componentPointer);
 			}
 		}
 	}
