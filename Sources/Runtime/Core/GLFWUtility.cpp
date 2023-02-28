@@ -19,7 +19,7 @@ namespace BorderlessEngine
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        glfwWindow = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
+        glfwWindow = glfwCreateWindow(width, height, "BorderlessEngine", NULL, NULL);
         if (glfwWindow == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;

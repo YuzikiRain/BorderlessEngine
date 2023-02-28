@@ -42,7 +42,6 @@ namespace BorderlessEditor
         auto glfwWindow = BorderlessEngine::GLFWManager::GetGLFWWindow();
 
         // 初始化
-        // AssetExplorer::StartWatching(std::filesystem::current_path());
         EditorWindowManager::Init();
         ImguiManager::InitImgui(glfwWindow);
 
