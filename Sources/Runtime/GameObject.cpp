@@ -2,7 +2,7 @@
 #include <cstring>
 #include "GameObject.h"
 
-using namespace std;
+using std::string;
 
 namespace BorderlessEngine
 {

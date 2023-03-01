@@ -9,6 +9,8 @@
 #include <rttr/registration>
 using namespace rttr;
 
+using std::vector;
+
 namespace BorderlessEngine
 {
 	class Transform : public Component

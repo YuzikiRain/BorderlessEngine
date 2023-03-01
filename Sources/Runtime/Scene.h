@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Object.h"
 #include <vector>
-using namespace std;
+using std::vector;
 
 namespace BorderlessEngine
 {

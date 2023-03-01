@@ -2,7 +2,8 @@
 
 #include "Object.h"
 
-using namespace std;
+using std::vector;
+using std::string;
 
 namespace BorderlessEngine
 {
@@ -26,9 +27,9 @@ namespace BorderlessEngine
 			string number;
 			string name = textures[i].type;
 			if (name == "texture_diffuse")
-				number = to_string(diffuseNr++);
+				number = std::to_string(diffuseNr++);
 			if (name == "texture_specular")
-				number = to_string(specularNr++);
+				number = std::to_string(specularNr++);
 			else
 				number = string();
 

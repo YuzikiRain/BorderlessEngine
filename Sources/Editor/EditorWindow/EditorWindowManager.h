@@ -5,6 +5,7 @@
 #include "EditorWindow/Hierarchy.h"
 #include "EditorWindow/SceneEditorWindow.h"
 #include "EditorWindow/GameEditorWindow.h"
+#include "EditorWindow/AssetBrowser.h"
 #include <vector>
 
 namespace BorderlessEditor
@@ -20,6 +21,7 @@ namespace BorderlessEditor
         static Hierarchy *hierarchy;
         static SceneEditorWindow *scene;
         static GameEditorWindow *game;
+        static AssetBrowser *assetBrowser;
         static std::vector<EditorWindow *> *editorWindows;
     };
 }

@@ -71,6 +71,7 @@
         "bitset": "cpp",
         "regex": "cpp",
         "future": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "filesystem": "cpp"
     }
 }

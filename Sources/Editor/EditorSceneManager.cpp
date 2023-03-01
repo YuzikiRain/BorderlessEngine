@@ -54,8 +54,8 @@ namespace BorderlessEditor
         if (path.empty())
             return;
 
-        fstream sceneFileStream;
-        sceneFileStream.open(path, ios::out | ios::trunc);
+        std::fstream sceneFileStream;
+        sceneFileStream.open(path, std::ios::out | std::ios::trunc);
         YAML::Node scene;
         auto objs = currentScene->GetAllGameObjects();
         for (size_t i = 0; i < objs.size(); i++)

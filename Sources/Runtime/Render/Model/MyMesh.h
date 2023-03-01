@@ -3,7 +3,7 @@
 #include <vector>
 #include "Vertex.h"
 
-using namespace std;
+using std::vector;
 
 namespace BorderlessEngine
 {

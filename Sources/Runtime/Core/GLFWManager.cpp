@@ -1,4 +1,4 @@
-#include "Core/GLFWUtility.h"
+#include "Core/GLFWManager.h"
 #include <iostream>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include "GLFW/glfw3native.h"

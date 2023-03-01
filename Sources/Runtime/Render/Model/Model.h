@@ -18,7 +18,8 @@
 #include <vector>
 #include "Object.h"
 
-using namespace std;
+using std::string;
+using std::vector;
 
 namespace BorderlessEngine
 {

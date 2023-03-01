@@ -7,7 +7,8 @@
 #include <rttr/registration>
 using namespace rttr;
 
-using namespace std;
+using std::string;
+using std::shared_ptr;
 
 namespace BorderlessEngine
 {
@@ -19,7 +20,7 @@ namespace BorderlessEngine
 		template <typename TComponent>
 		TComponent &AddComponent()
 		{
-			shared_ptr<TComponent> componentPointer = make_shared<TComponent>();
+			shared_ptr<TComponent> componentPointer = std::make_shared<TComponent>();
 			componentPointer->SetGameObject(this);
 			auto name = type::get(*componentPointer).get_name().to_string();
 			components[name] = componentPointer;
@@ -49,10 +50,10 @@ namespace BorderlessEngine
 			{
 				for (auto &kv : components)
 				{
-					if (shared_ptr<TComponent> target = dynamic_pointer_cast<TComponent>(kv.second))
+					if (shared_ptr<TComponent> target = std::dynamic_pointer_cast<TComponent>(kv.second))
 						return *target;
 				}
-				throw runtime_error("can't find component of type");
+				throw std::runtime_error("can't find component of type");
 			}
 			catch (const std::exception &e)
 			{

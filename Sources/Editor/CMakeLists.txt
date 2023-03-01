@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(borderlessengine_editor)
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(PROJECT_LIBRARIES)
 set(PROJECT_INCLUDE)
 set(PROJECT_SOURCE)

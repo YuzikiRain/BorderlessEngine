@@ -9,7 +9,7 @@
 #include "Vertex.h"
 #include "Texture.h"
 
-using namespace std;
+using std::vector;
 
 namespace BorderlessEngine
 {

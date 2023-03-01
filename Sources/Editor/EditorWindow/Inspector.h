@@ -3,7 +3,6 @@
 #include "Component.h"
 #include <memory>
 
-using namespace std;
 using namespace BorderlessEngine;
 
 namespace BorderlessEditor
@@ -15,6 +14,6 @@ namespace BorderlessEditor
 		void Draw();
 
 	private:
-		void DrawComponent(shared_ptr<Component> componentPointer);
+		void DrawComponent(std::shared_ptr<Component> componentPointer);
 	};
 }

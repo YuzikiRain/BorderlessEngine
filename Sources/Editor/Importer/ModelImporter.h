@@ -17,12 +17,14 @@
 // #define STB_IMAGE_IMPLEMENTATION
 #include "stb-image/stb_image.h"
 
-using namespace std;
 using namespace BorderlessEngine;
 
 const char *modelFilter = "Model (*.obj)\0*.obj\0";
 const char *modelFileExtension = "obj";
 const char *meshFileExtension = "mesh";
+
+using std::vector;
+using std::string;
 
 Assimp::Importer importer;
 const aiScene *scene;
@@ -88,11 +90,11 @@ namespace BorderlessEditor
         }
 
     private:
-        string directory;
-        vector<BorderlessEngine::MyMesh> meshes;
-        vector<Texture> textures_loaded; // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+        std::string directory;
+        std::vector<BorderlessEngine::MyMesh> meshes;
+        std::vector<Texture> textures_loaded; // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
-        GameObject *loadModel(string const &path)
+        GameObject *loadModel(std::string const &path)
         {
             // read file via ASSIMP
             // Assimp::Importer importer;
@@ -101,7 +103,7 @@ namespace BorderlessEditor
             // check for errors
             if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
             {
-                cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+                std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
                 return NULL;
             }
             // retrieve the directory path of the filepath
@@ -157,9 +159,9 @@ namespace BorderlessEditor
         BorderlessEngine::MyMesh processMesh(aiMesh *mesh, const aiScene *scene)
         {
             // data to fill
-            vector<Vertex> vertices;
-            vector<unsigned int> indices;
-            vector<Texture> textures;
+            std::vector<Vertex> vertices;
+            std::vector<unsigned int> indices;
+            std::vector<Texture> textures;
 
             // walk through each of the mesh's vertices
             for (size_t i = 0; i < mesh->mNumVertices; i++)
@@ -224,10 +226,10 @@ namespace BorderlessEditor
                 // normal: texture_normalN
 
                 // 1. diffuse maps
-                vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+                std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
                 textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
                 // 2. specular maps
-                vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+                std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
                 textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
                 // 3. normal maps
                 std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");

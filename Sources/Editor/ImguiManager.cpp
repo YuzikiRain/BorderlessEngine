@@ -42,7 +42,7 @@ namespace BorderlessEditor
         {
             if (ImGui::Button("Open Project"))
             {
-                auto path = FileUtility::OpenFileDialogue(modelFilter, modelFileExtension);
+                auto path = FileUtility::OpenDirectoryDialogue();
                 if (!path.empty())
                     {
                         EditorProjectManager::OpenProject(path);
@@ -52,7 +52,6 @@ namespace BorderlessEditor
         // 已打开工程，显示各个窗口
         else
         {
-
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
             bool isFrameRateOpen = false;

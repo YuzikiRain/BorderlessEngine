@@ -6,8 +6,8 @@
 #include "Transform.h"
 #include <iostream>
 #include <queue>
+#include <fstream>
 
-using namespace std;
 using namespace BorderlessEngine;
 
 namespace BorderlessEditor
@@ -20,16 +20,16 @@ namespace BorderlessEditor
         {
         }
 
-        static void SaveAsset(Object *object, string path)
+        static void SaveAsset(Object *object, std::string path)
         {
             auto obj = (GameObject *)object;
             if (obj != NULL)
             // if (typeid(object) == typeid(GameObject*))
             {
-                fstream sceneFileStream;
-                sceneFileStream.open(path, ios::out | ios::trunc);
+                std::fstream sceneFileStream;
+                sceneFileStream.open(path, std::ios::out | std::ios::trunc);
                 YAML::Node node;
-                queue<Transform> q = queue<Transform>();
+                std::queue<Transform> q = std::queue<Transform>();
                 q.push(obj->GetComponent<Transform>());
                 int count = 0;
                 while (!q.empty())
@@ -43,7 +43,7 @@ namespace BorderlessEditor
                     }
                     count++;
                 }
-                std::cout << node << endl;
+                // std::cout << node << std::add_cv_t;
                 sceneFileStream << node;
                 sceneFileStream.close();
             }
@@ -62,5 +62,23 @@ namespace BorderlessEditor
             node["transform"].push_back(t);
             // node["transform"][count]["gameObject"] = obj->childIndex;
         }
+
+        static void SetProjectPath(std::string projectPath)
+        {
+            AssetDatabase::projectPath = projectPath;
+        }
+
+        static std::string GetProjectPath()
+        {
+            return projectPath;
+        }
+
+        static std::string GetAssetPath()
+        {
+            return projectPath;
+        }
+
+    private:
+        static inline std::string projectPath;
     };
 }

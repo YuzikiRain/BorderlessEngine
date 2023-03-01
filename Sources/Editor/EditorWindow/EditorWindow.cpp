@@ -29,6 +29,10 @@ namespace BorderlessEditor
 	{
 		ImGui::End();
 	}
+	void EditorWindow::Close()
+	{
+		isOpen = false;
+	}
 	const char *name = "EditorWindow";
 	bool isOpen = false;
 }

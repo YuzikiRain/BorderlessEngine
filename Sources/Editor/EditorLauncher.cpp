@@ -1,5 +1,5 @@
 #include "EditorLauncher.h"
-#include "Core/GLFWUtility.h"
+#include "Core/GLFWManager.h"
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -8,9 +8,7 @@
 #include "EditorSceneManager.h"
 #include "ImguiManager.h"
 #include "Input/InputSystem.h"
-#include "AssetExplorer.h"
 #include "RTTRRegistration.h"
-#include <filesystem>
 
 #include <iostream>
 #include <cmath>
@@ -68,13 +66,12 @@ namespace BorderlessEditor
             // 交换缓冲区
             glfwSwapBuffers(glfwWindow);
             // 剩余的时间进行线程休眠，不进行多余的计算
-            // WaitForNextFrame();
+            WaitForNextFrame();
         }
     }
 
     void EditorLauncher::Input(GLFWwindow *window)
     {
-
     }
 
     void EditorLauncher::Render()

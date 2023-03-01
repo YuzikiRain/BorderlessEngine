@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
+#include "AssetDatabase.h"
 
-using namespace std;
+using std::string;
 
 namespace BorderlessEditor
 {
@@ -11,8 +12,8 @@ namespace BorderlessEditor
         static string OpenProject(string projectPath)
         {
             // 判断工程目录是否合法
+            AssetDatabase::SetProjectPath(projectPath);
 
-            
             hasInitialized = true;
             return projectPath;
         }

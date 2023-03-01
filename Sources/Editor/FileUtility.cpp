@@ -1,7 +1,7 @@
 #include "FileUtility.h"
 #include <string>
 #include <shobjidl.h>
-#include "Core/GLFWUtility.h"
+#include "Core/GLFWManager.h"
 // 打开文件对话框
 #include <commdlg.h>
 
@@ -57,7 +57,7 @@ namespace BorderlessEditor
     /// @param filter
     /// @param extension
     /// @return
-    std::string FileUtility::OpenDirectoryDialogue(const char *filter, const char *extension)
+    std::string FileUtility::OpenDirectoryDialogue()
     {
         BROWSEINFO bi;
         bi.hwndOwner = NULL;
