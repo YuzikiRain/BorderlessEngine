@@ -21,7 +21,8 @@ RTTR_REGISTRATION
 		.constructor<>()
 		// .property("Yaw", &BorderlessEngine::Transform::Yaw)
 		.property("Position", &BorderlessEngine::Transform::Position)
-		.method("GetMatrix", &BorderlessEngine::Transform::GetMatrix);
+		// .method("GetMatrix", &BorderlessEngine::Transform::GetMatrix)
+		;
 
 	registration::class_<glm::vec3>("glm::vec3")
 		.constructor<>()

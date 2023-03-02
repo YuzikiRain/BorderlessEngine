@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 project(borderlessengine_editor)
 
+#c++ standard
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(PROJECT_LIBRARIES)
 set(PROJECT_INCLUDE)
