@@ -44,31 +44,37 @@ namespace BorderlessEditor
             ImGui::BeginChild("AssetBrowser");
             // Get the size of the child (i.e. the whole draw size of the windows).
 
-            if (dropManager.IsDragging()) // somehow set to true when dragging files on top of your application
+            auto draggingFiles = dropManager.GetDraggingFiles();
+            // if (ImGui::IsWindowHovered())
             {
-                if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceExtern)) // we use an external source (i.e. not ImGui-created)
-                {
-                    // replace "FILES" with whatever identifier you want - possibly dependant upon what type of files are being dragged
-                    // you can specify a payload here with parameter 2 and the sizeof(parameter) for parameter 3.
-                    // I store the payload within a vector of strings within the application itself so don't need it.
-                    ImGui::SetDragDropPayload("FILES", nullptr, 0);
-                    ImGui::BeginTooltip();
-                    ImGui::Text("FILES");
-                    ImGui::EndTooltip();
-                    ImGui::EndDragDropSource();
-                }
+                ImGui::Text(draggingFiles.size() > 0 ? draggingFiles[0].c_str() : "FILES");
             }
 
-            if (ImGui::BeginDragDropTarget())
-            {
-                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("FILES"))
-                {
-                    auto d = payload->Data;
-                }
-            }
+            // if (dropManager.IsDragging()) // somehow set to true when dragging files on top of your application
+            // {
+            //     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceExtern)) // we use an external source (i.e. not ImGui-created)
+            //     {
+            //         // replace "FILES" with whatever identifier you want - possibly dependant upon what type of files are being dragged
+            //         // you can specify a payload here with parameter 2 and the sizeof(parameter) for parameter 3.
+            //         // I store the payload within a vector of strings within the application itself so don't need it.
+            //         ImGui::SetDragDropPayload("FILES", &draggingFiles, sizeof(std::vector<std::string>));
+            //         // ImGui::SetDragDropPayload("FILES", nullptr, 0);
+            //         ImGui::BeginTooltip();
+            //         // ImGui::Text(draggingFiles.size() > 0 ? draggingFiles[0].c_str() : "FILES");
+            //         ImGui::Text("FILES");
+            //         ImGui::EndTooltip();
+            //         ImGui::EndDragDropSource();
+            //     }
+            // }
 
-            // // Because I use the texture from OpenGL, I need to invert the V from the UV.
-            // ImGui::Image((ImTextureID)texture, wsize, ImVec2(0, 1), ImVec2(1, 0));
+            // if (ImGui::BeginDragDropTarget())
+            // {
+            //     if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("FILES"))
+            //     {
+            //         auto d = payload->Data;
+            //     }
+            //     ImGui::EndDragDropTarget();
+            // }
 
             ImGui::EndChild();
 

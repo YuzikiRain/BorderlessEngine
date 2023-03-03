@@ -1,6 +1,7 @@
 #pragma once
 
 #include <oleidl.h>
+#include "imgui/imgui.h"
 
 namespace BorderlessEditor
 {
@@ -41,6 +42,7 @@ namespace BorderlessEditor
 
             // trigger MouseDown for button 1 within ImGui
             //...
+            ImGui::GetIO().AddMouseButtonEvent(0, true);
 
             *pdwEffect &= DROPEFFECT_COPY;
             return S_OK;
@@ -54,7 +56,6 @@ namespace BorderlessEditor
         {
             // trigger MouseMove within ImGui, position is within pt.x and pt.y
             // grfKeyState contains flags for control, alt, shift etc
-            isDragging = false;
 
             *pdwEffect &= DROPEFFECT_COPY;
             return S_OK;
@@ -74,6 +75,7 @@ namespace BorderlessEditor
                 HDROP hdrop = (HDROP)stgm.hGlobal; // or reinterpret_cast<HDROP> if preferred
                 UINT file_count = DragQueryFile(hdrop, 0xFFFFFFFF, NULL, 0);
 
+                draggingFiles.clear();
                 // we can drag more than one file at the same time, so we have to loop here
                 for (UINT i = 0; i < file_count; i++)
                 {
@@ -83,6 +85,8 @@ namespace BorderlessEditor
                     {
                         // szFile contains the full path to the file, do something useful with it
                         // i.e. add it to a vector or something
+                        std::string filePath(szFile);
+                        draggingFiles.push_back(filePath);
                     }
                 }
 
@@ -92,9 +96,11 @@ namespace BorderlessEditor
                 // notify our application somehow that we've finished dragging the files (provide the data somehow)
                 //...
             }
+            isDragging = false;
 
             // trigger MouseUp for button 1 within ImGui
             //...
+            ImGui::GetIO().AddMouseButtonEvent(0, false);
 
             *pdwEffect &= DROPEFFECT_COPY;
             return S_OK;
@@ -102,7 +108,13 @@ namespace BorderlessEditor
 
         bool IsDragging() { return isDragging; }
 
+        std::vector<std::string> &GetDraggingFiles()
+        {
+            return draggingFiles;
+        }
+
     private:
         bool isDragging;
+        std::vector<std::string> draggingFiles;
     };
 }
