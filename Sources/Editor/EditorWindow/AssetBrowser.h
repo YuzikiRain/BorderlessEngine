@@ -32,6 +32,8 @@ namespace BorderlessEditor
             dropManager = DropManager();
             hwnd = GLFWManager::GetWin32Window();
             RegisterDragDrop(hwnd, &dropManager);
+            DropManager::onDrop o1 = std::bind(&OnDrop, this, std::placeholders::_1);
+            dropManager.Register(o1);
         }
 
         void Draw()
@@ -121,11 +123,17 @@ namespace BorderlessEditor
             ImGui::End();
         }
 
+        void OnDrop(std::vector<std::string> filePaths)
+        {
+        }
+
         void Close()
         {
             RevokeDragDrop(hwnd);
             OleUninitialize();
             isOpen = false;
+            DropManager::onDrop o1 = std::bind(&OnDrop, this, std::placeholders::_1);
+            dropManager.Unregister(o1);
         }
 
     private:

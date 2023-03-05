@@ -1,7 +1,7 @@
 #pragma once
-
 #include <oleidl.h>
 #include "imgui/imgui.h"
+#include <functional>
 
 namespace BorderlessEditor
 {
@@ -95,6 +95,10 @@ namespace BorderlessEditor
 
                 // notify our application somehow that we've finished dragging the files (provide the data somehow)
                 //...
+                for (auto &callback : onDropCallbacks)
+                {
+                    callback(draggingFiles);
+                }
             }
             isDragging = false;
 
@@ -113,8 +117,31 @@ namespace BorderlessEditor
             return draggingFiles;
         }
 
+        typedef std::function<void(std::vector<std::string> filePaths)> onDrop;
+
+        void Register(onDrop &callback)
+        {
+            onDropCallbacks.push_back(callback);
+        }
+
+        void Unregister(onDrop &callback)
+        {
+            for (auto it = onDropCallbacks.begin(); it != onDropCallbacks.end();)
+            {
+                if ((*it).target<onDrop>() == callback.target<onDrop>())
+                {
+                    it = onDropCallbacks.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
+            }
+        }
+
     private:
         bool isDragging;
         std::vector<std::string> draggingFiles;
+        std::vector<onDrop> onDropCallbacks;
     };
 }
