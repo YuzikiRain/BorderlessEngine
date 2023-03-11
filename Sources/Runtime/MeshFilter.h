@@ -10,7 +10,7 @@ namespace BorderlessEngine
 	{
 	public:
 		MeshFilter() {}
-		MyMesh *Mesh;
+		MyMesh Mesh;
 		Model *Model;
 
 	private:

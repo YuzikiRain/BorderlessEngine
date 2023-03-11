@@ -1,22 +1,28 @@
 #pragma once
 #include "Object.h"
 #include "Component.h"
+#include "Transform.h"
 #include <string>
 #include <unordered_map>
 #include <iostream>
 #include <rttr/registration>
 using namespace rttr;
 
-using std::string;
+#include "yaml-cpp/yaml.h"
+
+#include "ISerializable.h"
+
+using BorderlessEngine::GameObject;
 using std::shared_ptr;
+using std::string;
 
 namespace BorderlessEngine
 {
-	class GameObject : public Object
+	class GameObject : public Object, public ISerializable
 	{
 	public:
 		GameObject(string newName = "New GameObject", bool isActive = true);
-		~GameObject();
+		~GameObject(){};
 		template <typename TComponent>
 		TComponent &AddComponent()
 		{
@@ -61,6 +67,38 @@ namespace BorderlessEngine
 			}
 		}
 
+		Component &GetComponent(string componentType)
+		{
+			try
+			{
+				for (auto &kv : components)
+				{
+					if (type::get_by_name(componentType) == type::get(kv.second))
+						return *kv.second;
+				}
+				throw std::runtime_error("can't find component of type");
+			}
+			catch (const std::exception &e)
+			{
+				std::cerr << e.what() << '\n';
+			}
+		}
+
+		YAML::Node Serialize()
+		{
+			YAML::Node node;
+			for (auto &pair : components)
+			{
+				auto componentName = pair.first;
+				auto component = pair.second;
+				node[componentName + "s"].push_back((*component).Serialize());
+			}
+// GetComponent<Transform>().Parent.
+			// node[""] = 
+
+			return node;
+		}
+
 		// std::unordered_map<std::string, Component *> components;
 		std::unordered_map<std::string, shared_ptr<Component>> components;
 		string name;
@@ -70,3 +108,34 @@ namespace BorderlessEngine
 		void SetName(string name);
 	};
 }
+
+// namespace YAML
+// {
+// 	template <>
+// 	struct convert<GameObject>
+// 	{
+// 		static Node encode(const GameObject &gameObject)
+// 		{
+// 			Node node;
+// 			node["name"] = gameObject.name;
+// 			for (auto &pair : gameObject.components)
+// 			{
+// 				auto componentName = pair.first;
+// 				auto component = pair.second;
+// 				node[componentName + "s"].push_back((*component).Serialize());
+// 			}
+// 			return node;
+// 		}
+
+// 		static bool decode(const Node &node, GameObject &rhs)
+// 		{
+// 			if (!node.IsSequence())
+// 			{
+// 				return false;
+// 			}
+
+// 			rhs.x = node[0].as<int>();
+// 			return true;
+// 		}
+// 	};
+// }

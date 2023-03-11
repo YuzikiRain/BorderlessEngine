@@ -23,8 +23,8 @@ const char *modelFilter = "Model (*.obj)\0*.obj\0";
 const char *modelFileExtension = "obj";
 const char *meshFileExtension = "mesh";
 
-using std::vector;
 using std::string;
+using std::vector;
 
 Assimp::Importer importer;
 const aiScene *scene;
@@ -42,6 +42,8 @@ namespace BorderlessEditor
             auto modelPrefab = loadModel(path);
             auto p = &modelPrefab;
             AssetDatabase::SaveAsset(modelPrefab, newPath);
+            delete modelPrefab;
+
             return;
 
             // YAML::Node meshNode;
@@ -96,28 +98,33 @@ namespace BorderlessEditor
 
         GameObject *loadModel(std::string const &path)
         {
-            // read file via ASSIMP
-            // Assimp::Importer importer;
-            // const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-            scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-            // check for errors
-            if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+            try
             {
-                std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-                return NULL;
+                // read file via ASSIMP
+                // Assimp::Importer importer;
+                // const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+                scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+                // check for errors
+                if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+                {
+                    std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+                    throw std::runtime_error("ERROR::ASSIMP:: " + std::string(importer.GetErrorString()));
+                }
+                // retrieve the directory path of the filepath
+                directory = path.substr(0, path.find_last_of('/'));
+                auto name = path.substr(path.find_last_of('/') + 1);
+
+                auto modelPrefab = new GameObject(name.c_str());
+                auto t = modelPrefab->AddComponent<Transform>();
+                // process ASSIMP's root node recursively
+                processNode(scene->mRootNode, scene, t);
+
+                return modelPrefab;
             }
-            // retrieve the directory path of the filepath
-            directory = path.substr(0, path.find_last_of('/'));
-            auto name = path.substr(path.find_last_of('/') + 1);
-
-            auto modelPrefab = new GameObject(name.c_str());
-            auto t = modelPrefab->AddComponent<Transform>();
-            // process ASSIMP's root node recursively
-            processNode(scene->mRootNode, scene, t);
-            return NULL;
-            
-
-            return modelPrefab;
+            catch (const std::exception &e)
+            {
+                std::cerr << e.what() << '\n';
+            }
         }
 
         /// <summary>
@@ -125,7 +132,7 @@ namespace BorderlessEditor
         /// </summary>
         /// <param name="node"></param>
         /// <param name="scene"></param>
-        void processNode(aiNode *node, const aiScene *scene, Transform& transform)
+        void processNode(aiNode *node, const aiScene *scene, Transform &transform)
         {
             // process each mesh located at the current node
             for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -134,14 +141,14 @@ namespace BorderlessEditor
                 // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
                 aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
                 meshes.push_back(processMesh(mesh, scene));
-                processMesh(mesh, scene);
+                auto myMesh = processMesh(mesh, scene);
 
                 auto name = mesh->mName.C_Str();
                 auto child = new GameObject(name != "" ? name : "mesh" + i);
                 auto childTransform = child->AddComponent<Transform>();
                 childTransform.Parent = &transform;
                 transform.Children.push_back(&childTransform);
-                // child->AddComponent<MeshFilter>();
+                child->AddComponent<MeshFilter>().Mesh = myMesh;
             }
             // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
             for (unsigned int i = 0; i < node->mNumChildren; i++)

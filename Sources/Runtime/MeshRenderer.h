@@ -7,11 +7,11 @@ namespace BorderlessEngine
 	class MeshRenderer : public Component
 	{
 	public:
-		MeshRenderer()
+		MeshRenderer() : Component()
 		{
-			mesh = new Mesh();
+			// mesh = new Mesh();
 		}
 		void Draw();
-		Mesh *mesh = 0;
+		Mesh *mesh ;
 	};
 }

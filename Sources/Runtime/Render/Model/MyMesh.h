@@ -12,7 +12,9 @@ namespace BorderlessEngine
     public:
         MyMesh(vector<Vertex> vertices, vector<unsigned int> indices)
         {
-            
+        }
+        MyMesh()
+        {
         }
         MeshFileHead head;
     };
