@@ -16,12 +16,18 @@ set(borderlessengine_editor borderlessengine_editor)
 set(borderlessengine_editor_directory ${PROJECT_SOURCE_DIR}/Sources/Editor)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Sources/Editor)
 
+# exe
 set(EXE_SOURCES main.cpp)
-
 add_executable(LaunchBorderlessEngine ${EXE_SOURCES})
-# runtime
+
+# 链接runtime
 target_include_directories(LaunchBorderlessEngine PUBLIC ${borderlessengine_runtime_directory})
 target_link_libraries(LaunchBorderlessEngine PRIVATE ${borderlessengine_runtime})
-# editor
+# 链接editor
 target_include_directories(LaunchBorderlessEngine PUBLIC ${borderlessengine_editor_directory})
 target_link_libraries(LaunchBorderlessEngine PRIVATE ${borderlessengine_editor})
+
+# 拷贝dll
+file(GLOB_RECURSE allCopyFiles ${CMAKE_SOURCE_DIR}/ThirdParty *.dll)
+message(${allCopyFiles})
+file(COPY ${allCopyFiles} DESTINATION ${CMAKE_BINARY_DIR})

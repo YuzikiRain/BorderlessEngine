@@ -51,6 +51,16 @@ namespace BorderlessEngine
 			return glm::degrees(glm::eulerAngles(Quaternion));
 		}
 
+        YAML::Node Serialize() override {
+            YAML::Node node;
+            YAML::Node nodePosition;
+            nodePosition["x"] = Position.x;
+            nodePosition["y"] = Position.y;
+            nodePosition["z"] = Position.z;
+            node["position"] = nodePosition;
+            return node;
+        }
+
 		glm::vec3 Position;
 		glm::vec3 Front;
 		glm::vec3 Up;

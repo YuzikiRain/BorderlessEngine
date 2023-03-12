@@ -17,6 +17,12 @@ namespace BorderlessEngine
 		vector<GameObject *> GetAllGameObjects();
 		const char *name;
 
+        YAML::Node Serialize() override {
+            YAML::Node node;
+            node["name"] = Name;
+            return node;
+        }
+
 	private:
 		mutable std::vector<GameObject *> gameObjects;
 	};

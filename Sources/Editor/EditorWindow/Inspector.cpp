@@ -50,7 +50,7 @@ namespace BorderlessEditor
 		// 横向布局
 		ImGui::SameLine(0.0f, 10.0f);
 		// 这里包括最后的\0空白符，所以需要加1
-		ImGui::InputText("##name", (char *)obj->name.c_str(), nameLimit + 1);
+		ImGui::InputText("##name", (char *)obj->Name.c_str(), nameLimit + 1);
 
 		ImGui::NewLine();
 		ImGui::Spacing();

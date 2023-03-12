@@ -13,6 +13,12 @@ namespace BorderlessEngine
 		MyMesh Mesh;
 		Model *Model;
 
+        YAML::Node Serialize() override {
+            YAML::Node node;
+            node["mesh"] = "ttt";
+            return node;
+        }
+
 	private:
 		;
 

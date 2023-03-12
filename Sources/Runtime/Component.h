@@ -1,37 +1,45 @@
 #pragma once
 
 #include <rttr/registration>
+
 using namespace rttr;
 
 #include "Object.h"
 #include "ISerializable.h"
 
-namespace BorderlessEngine
-{
-	class GameObject;
-	class Component : public Object, public ISerializable
-	{
-		friend GameObject;
+namespace BorderlessEngine {
+    class GameObject;
 
-	public:
-		// 至少有一个虚函数，否则不会被编译器认为是多态类型而无法将父类转换成子类
-		virtual GameObject *GetGameObject() { return GameObject; }
-		void SetGameObject(GameObject *gameObject) { this->GameObject = gameObject; }
-		YAML::Node Serialize()
-		{
-			// YAML::Node node;
-			// node["base"] = Object::Serialize();
+    class Component : public Object {
+        friend GameObject;
 
-			// return node;
+    public:
+        // 至少有一个虚函数，否则不会被编译器认为是多态类型而无法将父类转换成子类
+        virtual GameObject *GetGameObject() { return GameObject; }
 
-			return Object::Serialize();
-		}
-	protected:
-	private:
-		GameObject *GameObject = 0;
+        void SetGameObject(GameObject *gameObject) { this->GameObject = gameObject; }
 
-		RTTR_ENABLE()
-	};
+        YAML::Node Serialize() override {
+            YAML::Node node;
+            return node;
+        };
+
+//        virtual YAML::Node Serialize();
+//		YAML::Node Serialize()
+//		{
+//			// YAML::Node node;
+//			// node["base"] = Object::Serialize();
+//
+//			// return node;
+//
+//			return Object::Serialize();
+//		}
+    protected:
+    private:
+        GameObject *GameObject = 0;
+
+    RTTR_ENABLE()
+    };
 }
 
 // namespace YAML

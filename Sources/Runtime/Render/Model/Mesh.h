@@ -24,6 +24,12 @@ namespace BorderlessEngine
 		Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
 		void Draw(Shader shader);
 
+        YAML::Node Serialize() override {
+            YAML::Node node;
+            node["test"] = "ttt";
+            return node;
+        }
+
 	private:
 		unsigned int VAO, VBO, EBO;
 		void setupMesh();

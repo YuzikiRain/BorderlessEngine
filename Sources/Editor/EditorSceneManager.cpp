@@ -15,20 +15,17 @@
 
 using Scene = BorderlessEngine::Scene;
 
-namespace BorderlessEditor
-{
+namespace BorderlessEditor {
     const char *sceneFilter = "Scene (*.scene)\0*.scene\0";
     const char *sceneFileExtension = "scene";
     Scene *EditorSceneManager::currentScene;
 
-    void EditorSceneManager::NewScene()
-    {
+    void EditorSceneManager::NewScene() {
         CloseScene();
         currentScene = new BorderlessEngine::Scene();
     }
 
-    void EditorSceneManager::OpenScene()
-    {
+    void EditorSceneManager::OpenScene() {
         auto path = FileUtility::OpenFileDialogue(sceneFilter, sceneFileExtension);
         if (path.empty())
             return;
@@ -38,18 +35,17 @@ namespace BorderlessEditor
         YAML::Node sceneData = YAML::LoadFile(path);
         auto objs = vector<BorderlessEngine::GameObject *>();
 
-        for (size_t i = 0; i < sceneData["gameObjects"].size(); i++)
-        {
+        for (size_t i = 0; i < sceneData["gameObjects"].size(); i++) {
             auto name = sceneData["gameObjects"][i]["name"].as<string>();
-            auto obj = new BorderlessEngine::GameObject(name.c_str(), sceneData["gameObjects"][i]["isActive"].as<bool>());
-            auto transform = obj->AddComponent<BorderlessEngine::Transform>();
+            auto obj = new BorderlessEngine::GameObject(name.c_str(),
+                                                        sceneData["gameObjects"][i]["isActive"].as<bool>());
+            auto &transform = obj->AddComponent<BorderlessEngine::Transform>();
             objs.push_back(obj);
         }
         currentScene = new BorderlessEngine::Scene("scene", objs);
     }
 
-    void EditorSceneManager::SaveScene()
-    {
+    void EditorSceneManager::SaveScene() {
         auto path = FileUtility::SaveFileDialogue(sceneFilter, sceneFileExtension);
         if (path.empty())
             return;
@@ -58,10 +54,9 @@ namespace BorderlessEditor
         sceneFileStream.open(path, std::ios::out | std::ios::trunc);
         YAML::Node scene;
         auto objs = currentScene->GetAllGameObjects();
-        for (size_t i = 0; i < objs.size(); i++)
-        {
+        for (size_t i = 0; i < objs.size(); i++) {
             auto obj = objs[i];
-            scene["gameObjects"][i]["name"] = obj->name;
+            scene["gameObjects"][i]["name"] = obj->Name;
             scene["gameObjects"][i]["isActive"] = obj->isActive;
         }
 
@@ -69,28 +64,23 @@ namespace BorderlessEditor
         sceneFileStream.close();
     }
 
-    void EditorSceneManager::CloseScene()
-    {
+    void EditorSceneManager::CloseScene() {
         delete currentScene;
     }
 
-    Scene *EditorSceneManager::GetCurrentScene()
-    {
+    Scene *EditorSceneManager::GetCurrentScene() {
         return currentScene;
     }
 
-    void EditorSceneManager::CreateNewGameObject()
-    {
+    void EditorSceneManager::CreateNewGameObject() {
         currentScene->AddEmptyGameObject();
     }
 
-    void EditorSceneManager::CreateNewCube()
-    {
+    void EditorSceneManager::CreateNewCube() {
         currentScene->AddCube();
     }
 
-    vector<BorderlessEngine::GameObject *> EditorSceneManager::GetAllGameObjects()
-    {
+    vector<BorderlessEngine::GameObject *> EditorSceneManager::GetAllGameObjects() {
         return currentScene->GetAllGameObjects();
     }
 }

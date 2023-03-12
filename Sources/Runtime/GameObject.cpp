@@ -14,6 +14,6 @@ namespace BorderlessEngine
 
 	void GameObject::SetName(string name)
 	{
-		this->name = name;
+		this->Name = name;
 	}
 }

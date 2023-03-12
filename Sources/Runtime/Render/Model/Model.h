@@ -23,7 +23,7 @@ using std::vector;
 
 namespace BorderlessEngine
 {
-	class Model : public Object
+	class Model
 	{
 	public:
 		Model(string const &path, bool gamma = false);
@@ -47,5 +47,7 @@ namespace BorderlessEngine
 		Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 		vector<Texture> loadMaterialTextures(aiMaterial *material, aiTextureType type, string typeName);
 		unsigned int TextureFromFile(const char *path, const string &directoryPath, bool gamma = false);
+
+
 	};
 }

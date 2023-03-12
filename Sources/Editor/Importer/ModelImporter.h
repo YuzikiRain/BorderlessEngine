@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ScriptedImporter.h"
 #include <fstream>
 #include <vector>
@@ -29,18 +30,14 @@ using std::vector;
 Assimp::Importer importer;
 const aiScene *scene;
 
-namespace BorderlessEditor
-{
-    class ModelImporter : ScriptedImporter
-    {
+namespace BorderlessEditor {
+    class ModelImporter : ScriptedImporter {
     public:
         // ModelImporter(std::string path) : ScriptedImporter(path) {}
-        void OnImportAsset(AssetImportContext context)
-        {
+        void OnImportAsset(AssetImportContext context) {
             auto path = context.path;
             auto newPath = context.newPath;
             auto modelPrefab = loadModel(path);
-            auto p = &modelPrefab;
             AssetDatabase::SaveAsset(modelPrefab, newPath);
             delete modelPrefab;
 
@@ -96,10 +93,8 @@ namespace BorderlessEditor
         std::vector<BorderlessEngine::MyMesh> meshes;
         std::vector<Texture> textures_loaded; // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
-        GameObject *loadModel(std::string const &path)
-        {
-            try
-            {
+        GameObject *loadModel(std::string const &path) {
+            try {
                 // read file via ASSIMP
                 // Assimp::Importer importer;
                 // const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -115,14 +110,14 @@ namespace BorderlessEditor
                 auto name = path.substr(path.find_last_of('/') + 1);
 
                 auto modelPrefab = new GameObject(name.c_str());
-                auto t = modelPrefab->AddComponent<Transform>();
+                auto &t = modelPrefab->AddComponent<Transform>();
                 // process ASSIMP's root node recursively
                 processNode(scene->mRootNode, scene, t);
 
+
                 return modelPrefab;
             }
-            catch (const std::exception &e)
-            {
+            catch (const std::exception &e) {
                 std::cerr << e.what() << '\n';
             }
         }
@@ -132,11 +127,9 @@ namespace BorderlessEditor
         /// </summary>
         /// <param name="node"></param>
         /// <param name="scene"></param>
-        void processNode(aiNode *node, const aiScene *scene, Transform &transform)
-        {
+        void processNode(aiNode *node, const aiScene *scene, Transform &transform) {
             // process each mesh located at the current node
-            for (unsigned int i = 0; i < node->mNumMeshes; i++)
-            {
+            for (unsigned int i = 0; i < node->mNumMeshes; i++) {
                 // the node object only contains indices to index the actual objects in the scene.
                 // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
                 aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
@@ -145,17 +138,16 @@ namespace BorderlessEditor
 
                 auto name = mesh->mName.C_Str();
                 auto child = new GameObject(name != "" ? name : "mesh" + i);
-                auto childTransform = child->AddComponent<Transform>();
+                auto &childTransform = child->AddComponent<Transform>();
                 childTransform.Parent = &transform;
                 transform.Children.push_back(&childTransform);
                 child->AddComponent<MeshFilter>().Mesh = myMesh;
             }
             // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
-            for (unsigned int i = 0; i < node->mNumChildren; i++)
-            {
+            for (unsigned int i = 0; i < node->mNumChildren; i++) {
                 auto name = node->mName.C_Str();
                 auto child = new GameObject(name != "" ? name : "gameObject" + i);
-                auto childTransform = child->AddComponent<Transform>();
+                auto &childTransform = child->AddComponent<Transform>();
                 childTransform.Parent = &transform;
                 transform.Children.push_back(&childTransform);
 
@@ -163,16 +155,14 @@ namespace BorderlessEditor
             }
         }
 
-        BorderlessEngine::MyMesh processMesh(aiMesh *mesh, const aiScene *scene)
-        {
+        BorderlessEngine::MyMesh processMesh(aiMesh *mesh, const aiScene *scene) {
             // data to fill
             std::vector<Vertex> vertices;
             std::vector<unsigned int> indices;
             std::vector<Texture> textures;
 
             // walk through each of the mesh's vertices
-            for (size_t i = 0; i < mesh->mNumVertices; i++)
-            {
+            for (size_t i = 0; i < mesh->mNumVertices; i++) {
                 Vertex vertex;
                 glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
                 // positions
@@ -181,8 +171,7 @@ namespace BorderlessEditor
                 vector.z = mesh->mVertices[i].z;
                 vertex.Position = vector;
                 // normals
-                if (mesh->HasNormals())
-                {
+                if (mesh->HasNormals()) {
                     vector.x = mesh->mNormals[i].x;
                     vector.y = mesh->mNormals[i].y;
                     vector.z = mesh->mNormals[i].z;
@@ -207,22 +196,19 @@ namespace BorderlessEditor
                     vector.y = mesh->mBitangents[i].y;
                     vector.z = mesh->mBitangents[i].z;
                     vertex.Bitangent = vector;
-                }
-                else
+                } else
                     vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 
                 vertices.push_back(vertex);
             }
             // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-            for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-            {
+            for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
                 aiFace face = mesh->mFaces[i];
                 // retrieve all indices of the face and store them in the indices vector
                 for (unsigned int j = 0; j < face.mNumIndices; j++)
                     indices.push_back(face.mIndices[j]);
             }
-            if (mesh->mMaterialIndex >= 0)
-            {
+            if (mesh->mMaterialIndex >= 0) {
                 // process materials
                 aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
                 // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
@@ -233,16 +219,20 @@ namespace BorderlessEditor
                 // normal: texture_normalN
 
                 // 1. diffuse maps
-                std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+                std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE,
+                                                                        "texture_diffuse");
                 textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
                 // 2. specular maps
-                std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+                std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR,
+                                                                         "texture_specular");
                 textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
                 // 3. normal maps
-                std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+                std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT,
+                                                                       "texture_normal");
                 textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
                 // 4. height maps
-                std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+                std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT,
+                                                                       "texture_height");
                 textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
             }
 
@@ -251,26 +241,21 @@ namespace BorderlessEditor
             return BorderlessEngine::MyMesh(vertices, indices);
         }
 
-        vector<Texture> loadMaterialTextures(aiMaterial *material, aiTextureType type, string typeName)
-        {
+        vector<Texture> loadMaterialTextures(aiMaterial *material, aiTextureType type, string typeName) {
             vector<Texture> textures;
-            for (size_t i = 0; i < material->GetTextureCount(type); i++)
-            {
+            for (size_t i = 0; i < material->GetTextureCount(type); i++) {
                 aiString str;
                 material->GetTexture(type, i, &str);
                 // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
                 bool skip = false;
-                for (unsigned int j = 0; j < textures_loaded.size(); j++)
-                {
-                    if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
-                    {
+                for (unsigned int j = 0; j < textures_loaded.size(); j++) {
+                    if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0) {
                         textures.push_back(textures_loaded[j]);
                         skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                         break;
                     }
                 }
-                if (!skip)
-                { // if texture hasn't been loaded already, load it
+                if (!skip) { // if texture hasn't been loaded already, load it
                     Texture texture;
                     // // 不知道为什么，这里的str.data字符数组的前4个字符都是0，所以只能从4开始读取
                     char *realPath = &str.data[4];
@@ -280,14 +265,14 @@ namespace BorderlessEditor
                     texture.path = realPath;
                     // texture.path = str.C_Str();
                     textures.push_back(texture);
-                    textures_loaded.push_back(texture); // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+                    textures_loaded.push_back(
+                            texture); // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
                 }
             }
             return textures;
         }
 
-        unsigned int TextureFromFile(const char *path, const string &directoryPath, bool gamma = false)
-        {
+        unsigned int TextureFromFile(const char *path, const string &directoryPath, bool gamma = false) {
             string filename = string(path);
             filename = directory + '/' + filename;
 
@@ -296,8 +281,7 @@ namespace BorderlessEditor
 
             int width, height, nrComponents;
             unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-            if (data)
-            {
+            if (data) {
                 GLenum format;
                 if (nrComponents == 1)
                     format = GL_RED;
@@ -316,9 +300,7 @@ namespace BorderlessEditor
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
                 stbi_image_free(data);
-            }
-            else
-            {
+            } else {
                 std::cout << "Texture failed to load at path: " << path << std::endl;
                 stbi_image_free(data);
             }

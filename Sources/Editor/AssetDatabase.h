@@ -25,10 +25,10 @@ namespace BorderlessEditor
 
         static void SaveAsset(Object *object, std::string path)
         {
-            // std::fstream sceneFileStream;
-            // sceneFileStream.open(path, std::ios::out | std::ios::trunc);
-            // sceneFileStream << object->Serialize();
-            // sceneFileStream.close();
+             std::fstream sceneFileStream;
+             sceneFileStream.open(path, std::ios::out | std::ios::trunc);
+             sceneFileStream << object->Serialize();
+             sceneFileStream.close();
 
             std::cout << object->Serialize();
         }
@@ -37,7 +37,7 @@ namespace BorderlessEditor
         {
             auto obj = transform.GetGameObject();
             YAML::Node g;
-            g["name"] = obj->name;
+            g["name"] = obj->Name;
             g["isActive"] = obj->isActive;
             // g[count]["id"] = obj->name;
             node["GameObjects"].push_back(g);
